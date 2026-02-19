@@ -6,7 +6,13 @@ height = 250;
     constructor(){
         super().loadImage('img/5_background/layers/4_clouds/1.png');
     
-    this.x = 200 + Math.random() * 500; //Zahl zwischen 200 und 700 
-    
+    this.x = Math.random() * 500; //Zahl zwischen 200 und 700 
+    this.animate();
+    }
+
+    animate(){  //Wir animieren die Wolken damit di sich bewegen 
+        setInterval(() =>{
+            this.x -= 0.15; //bewegen sich nach links, 60 mal pro sekunde wird 0.15pixel von x coordinate von wolke abgezogen
+        }, 1000 / 60); // 60 mal pro sekunde 
     }
 }
