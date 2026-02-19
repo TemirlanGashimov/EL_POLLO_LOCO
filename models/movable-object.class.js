@@ -1,8 +1,8 @@
 class MovableObject {
   x = 120;
   y = 280;
-  height = 150;
-  width = 100;
+  height = 150; // höhe von objecten wie Charakter Chicken
+  width = 100;  // breite von objecten wie Character und Chicken
   img;
 
 
