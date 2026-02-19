@@ -6,6 +6,7 @@ class MovableObject {
   width = 100;  // breite von objecten wie Character und Chicken
   imageCache = {};
   currentImage = 0;
+  speed = 0.15;
 
 //loadImage('img/test.png);
   loadImage(path){
@@ -29,5 +30,9 @@ class MovableObject {
     console.log("Moving right");
   }
 
-  moveLeft() {}
+   moveLeft(){
+        setInterval(() =>{
+            this.x -= this.speed; //bewegen sich nach links, 60 mal pro sekunde wird 0.15pixel von x coordinate von wolke abgezogen
+        }, 1000 / 60); // 60 mal pro sekunde 
+    }
 }
