@@ -3,6 +3,7 @@ y = 20;
 width = 500;
 height = 250;
 
+
     constructor(){
         super().loadImage('img/5_background/layers/4_clouds/1.png');
     
@@ -11,8 +12,8 @@ height = 250;
     }
 
     animate(){  //Wir animieren die Wolken damit di sich bewegen 
-        setInterval(() =>{
-            this.x -= 0.15; //bewegen sich nach links, 60 mal pro sekunde wird 0.15pixel von x coordinate von wolke abgezogen
-        }, 1000 / 60); // 60 mal pro sekunde 
+        this.moveLeft();
     }
+
+   
 }
