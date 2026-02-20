@@ -16,11 +16,18 @@ class World{
     ];
     canvas;
     ctx;
+    keyboard;
 
-    constructor(canvas){
+    constructor(canvas, keyboard){
         this.ctx = canvas.getContext('2d');
         this.canvas = canvas;
+        this.keyboard = keyboard;
         this.draw();
+        this.setWorld();
+    }
+
+    setWorld(){
+        this.character.world = this;
     }
 
         // Draw() wird immer wieder aufgerufen
@@ -28,6 +35,7 @@ class World{
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // canvas wird gelöscht
 
         this.addObjectsToMap(this.backgroundObjects); // das hintergrund soll als erste dargestellt werden damit die objecte auf der hintergrund zu sehen/befinden sind
+        
         this.addToMap(this.character);
         this.addObjectsToMap(this.clouds);
         this.addObjectsToMap(this.enemies);
