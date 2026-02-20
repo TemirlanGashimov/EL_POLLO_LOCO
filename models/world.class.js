@@ -55,6 +55,16 @@ class World{
     }
 
     addToMap(mo) {
+        if(mo.otherDirection){ // wir schauen ob unsere objekt eine andere richtung hat 
+            this.ctx.save(); // wenn ja speichern wir aktuelle  einstellung unsere context/bilder
+            this.ctx.translate(mo.width, 0);// dann verändern wir die methode wie wir die bilder einfügen
+            this.ctx.scale(-1, 1);// und drehen alle in y Achse wir spiegeln einmal  alles
+            mo.x = mo.x * -1;
+        }
         this.ctx.drawImage(mo.img, mo.x, mo.y, mo.width, mo.height);
+        if (mo.otherDirection){ // wenn unsere context sich verändert habe wie wir in oberen if statement sehen hier mache wir das alles wieder rückganging
+            mo.x = mo.x * -1;
+            this.ctx.restore();
+        }
     }
 }
