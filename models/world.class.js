@@ -17,6 +17,7 @@ class World{
     canvas;
     ctx;
     keyboard;
+    camera_x = 0;
 
     constructor(canvas, keyboard){
         this.ctx = canvas.getContext('2d');
@@ -34,11 +35,15 @@ class World{
     draw(){
         this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // canvas wird gelöscht
 
+        this.ctx.translate(this.camera_x, 0); // dadurch bewegt sich die kamera nach rechts
+
         this.addObjectsToMap(this.backgroundObjects); // das hintergrund soll als erste dargestellt werden damit die objecte auf der hintergrund zu sehen/befinden sind
         
-        this.addToMap(this.character);
-        this.addObjectsToMap(this.clouds);
-        this.addObjectsToMap(this.enemies);
+        this.addToMap(this.character); //unsere caracter 
+        this.addObjectsToMap(this.clouds); // unsere wolken
+        this.addObjectsToMap(this.enemies); // unsere genger, Chicken
+ 
+        this.ctx.translate(-this.camera_x, 0); // dadurch unsere kamear bewegt sich nach links
         
 
         let self = this;

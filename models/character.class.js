@@ -32,6 +32,7 @@ class Character extends MovableObject {
             this.x -= this.speed;
             this.otherDirection = true; // wenn ich linke taste drücke bild gespiegelt quasi Charakter dreht sich zurück
         }
+        this.world.camera_x = -this.x;
 
     }, 1000 / 60);
 
