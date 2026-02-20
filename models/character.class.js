@@ -24,10 +24,13 @@ class Character extends MovableObject {
     setInterval(()=>{
         if (this.world.keyboard.RIGHT) {
             this.x += this.speed;
+            this.otherDirection = false; // hier Charakter schaut nach vorne 
+
         }
 
         if (this.world.keyboard.LEFT) {
             this.x -= this.speed;
+            this.otherDirection = true; // wenn ich linke taste drücke bild gespiegelt quasi Charakter dreht sich zurück
         }
 
     }, 1000 / 60);
