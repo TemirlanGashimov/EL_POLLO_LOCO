@@ -8,9 +8,9 @@ class MovableObject {
   currentImage = 0;
   speed = 0.15;
   otherDirection = false;
-  0;
   speedY = 0;
   acceleration = 2.5;
+  energy = 100; 
 
   applyGravity() {
     setInterval(() => {
@@ -29,6 +29,40 @@ class MovableObject {
   loadImage(path) {
     this.img = new Image(); //this.img = document.getElementById('image') <img id="image" src>
     this.img.src = path;
+  }
+
+  draw(ctx) {
+        ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
+  }
+
+  drawFrame(ctx){
+    if(this instanceof Character || this instanceof Chicken){ // damit übergeben wird die unten definierte code das der nur die Chicken und Character in Käschen nimmt 
+    ctx.beginPath();
+    ctx.lineWidth = '5';
+    ctx.strokeStyle = 'blue';
+    ctx.rect (this.x, this.y, this.width, this.height);
+    ctx.stroke()
+  }
+  }
+
+  //character.isColliding(chicken);
+  isColliding(mo){
+    return this.x + this.width > mo.x &&
+    this.y + this.height > mo.y &&
+    this.x < mo.x &&
+    this.y < mo.y + mo.height;
+
+  }
+
+  hit(){
+    this.energy -= 5;
+    if(this.energy < 0) {
+        this.energy = 0 ;
+    }
+  }
+  
+  isDead() {
+    return this.energy == 0;
   }
 
   //**
@@ -51,13 +85,13 @@ class MovableObject {
 
   moveRight() {
     this.x += this.speed;
-    this.otherDirection = false;
+    
   }
 
   moveLeft() {
     
       this.x -= this.speed; //bewegen sich nach links, 60 mal pro sekunde wird 0.15pixel von x coordinate von wolke abgezogen
-            this.otherDirection = true; // wenn ich linke taste drücke bild gespiegelt quasi Charakter dreht sich zurück 
+            
   }
 
   jump() {
