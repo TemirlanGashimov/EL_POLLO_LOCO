@@ -1,9 +1,6 @@
 class World{
     character = new Character();
-    enemies = level1.enemies;
-    clouds = level1.clouds;
-    backgroundObjects = level1.backgroundObjects;
-
+   level = level1;
     canvas;
     ctx;
     keyboard;
@@ -27,11 +24,11 @@ class World{
 
         this.ctx.translate(this.camera_x, 0); // dadurch bewegt sich die kamera nach rechts
 
-        this.addObjectsToMap(this.backgroundObjects); // das hintergrund soll als erste dargestellt werden damit die objecte auf der hintergrund zu sehen/befinden sind
+        this.addObjectsToMap(this.level.backgroundObjects); // das hintergrund soll als erste dargestellt werden damit die objecte auf der hintergrund zu sehen/befinden sind
         
         this.addToMap(this.character); //unsere caracter 
-        this.addObjectsToMap(this.clouds); // unsere wolken
-        this.addObjectsToMap(this.enemies); // unsere genger, Chicken
+        this.addObjectsToMap(this.level.clouds); // unsere wolken
+        this.addObjectsToMap(this.level.enemies); // unsere genger, Chicken
  
         this.ctx.translate(-this.camera_x, 0); // dadurch unsere kamear bewegt sich nach links
         
