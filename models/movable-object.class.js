@@ -16,19 +16,13 @@ class MovableObject extends DrawableObject {
   }
 
   isAboveGround() {
+    if (this instanceof ThrowableObject){ //Throwable object should always fall
+        return true;
+    }else {
     return this.y < 140;
   }
-
-  drawFrame(ctx){
-    if(this instanceof Character || this instanceof Chicken){ // damit übergeben wird die unten definierte code das der nur die Chicken und Character in Käschen nimmt 
-    ctx.beginPath();
-    ctx.lineWidth = '5';
-    ctx.strokeStyle = 'blue';
-    ctx.rect (this.x, this.y, this.width, this.height);
-    ctx.stroke()
   }
-  }
-
+  
   //character.isColliding(chicken);
   isColliding(mo){
     return this.x + this.width > mo.x &&
