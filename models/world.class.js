@@ -10,6 +10,8 @@ class World {
   statusBarBottle = new StatusBarBottle();
   throwableObjects = [];
 
+  coin = new Coin();
+
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
@@ -68,6 +70,7 @@ class World {
     this.addToMap(this.character); //unsere caracter
     this.addObjectsToMap(this.level.clouds); // unsere wolken
     this.addObjectsToMap(this.level.enemies); // unsere genger, Chicken
+    this.addObjectsToMap(this.level.coins);
     this.addObjectsToMap(this.throwableObjects); // unsere flasche
 
     this.ctx.translate(-this.camera_x, 0); // dadurch unsere kamear bewegt sich nach links
