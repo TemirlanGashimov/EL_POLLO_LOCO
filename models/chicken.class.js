@@ -1,35 +1,37 @@
-class Chicken extends MovableObject{
+class Chicken extends MovableObject {
+  y = 370; // platzierung auf y Achse // sobald die höche sich änder muss man auch die y Achse ändern damit die auf eine ebene sind +-
+  height = 50; // höche von unsere chicken wie hoch/groß die sind
+  width = 85; //Breite von unseren chicken
 
-  y = 370;      // platzierung auf y Achse // sobald die höche sich änder muss man auch die y Achse ändern damit die auf eine ebene sind +-
-  height = 50; // höche von unsere chicken wie hoch/groß die sind 
-  width = 85; //Breite von unseren chicken 
+  offset = {
+    top: 10,
+    left: 5,
+    right: 5,
+    bottom: 5,
+  };
 
   IMAGES_WALKING = [
-    'img/3_enemies_chicken/chicken_normal/1_walk/1_w.png',
-    'img/3_enemies_chicken/chicken_normal/1_walk/2_w.png',
-    'img/3_enemies_chicken/chicken_normal/1_walk/3_w.png'
-
+    "img/3_enemies_chicken/chicken_normal/1_walk/1_w.png",
+    "img/3_enemies_chicken/chicken_normal/1_walk/2_w.png",
+    "img/3_enemies_chicken/chicken_normal/1_walk/3_w.png",
   ];
- 
-    constructor(){
-        super().loadImage('img/3_enemies_chicken/chicken_normal/1_walk/1_w.png');
-        this.loadImages(this.IMAGES_WALKING);
-    
-    this.x = 200 + Math.random() * 500; //Zahl zwischen 200 und 700 
-    this.speed = 0.15 + Math.random() * 0.25; // jeder Hünnchen bekommt verschiedene geschwindidkeit 
-    this.animate();
-    }
 
-    animate() {
-setInterval(() => {
-       this.moveLeft();
+  constructor() {
+    super().loadImage("img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
+    this.loadImages(this.IMAGES_WALKING);
+
+    this.x = 200 + Math.random() * 500 * 3; //Zahl zwischen 200 und 700
+    this.speed = 0.15 + Math.random() * 0.25; // jeder Hünnchen bekommt verschiedene geschwindidkeit
+    this.animate();
+  }
+
+  animate() {
+    setInterval(() => {
+      this.moveLeft();
     }, 1000 / 60); // 60 mal pro sekunde
 
-     
-
-        setInterval(() => {
-            this.playAnimation(this.IMAGES_WALKING);
+    setInterval(() => {
+      this.playAnimation(this.IMAGES_WALKING);
     }, 200);
-}
-  
+  }
 }
