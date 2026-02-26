@@ -1,9 +1,9 @@
 class MovableObject extends DrawableObject {
-  speed = 0.15;
+  speed = 0.5;
   otherDirection = false;
   speedY = 0;
   acceleration = 2.5;
-  energy = 100; 
+  energy = 100;
   lastHit = 0;
 
   applyGravity() {
@@ -16,37 +16,37 @@ class MovableObject extends DrawableObject {
   }
 
   isAboveGround() {
-    if (this instanceof ThrowableObject){ //Throwable object should always fall
-        return true;
-    }else {
-    return this.y < 140;
-  }
-  }
-  
-  //character.isColliding(chicken);
-  isColliding(mo){
-    return this.x + this.width > mo.x &&
-    this.y + this.height > mo.y &&
-    this.x < mo.x &&
-    this.y < mo.y + mo.height;
-
-  }
-
-  hit(){
-    this.energy -= 5;
-    if(this.energy < 0) {
-        this.energy = 0 ;
+    if (this instanceof ThrowableObject) {
+      //Throwable object should always fall
+      return true;
     } else {
-        this.lastHit = new Date().getTime();
+      return this.y < 140;
     }
   }
 
-  isHurt(){
+  //character.isColliding(chicken);
+  isColliding(mo) {
+  return (this.x + this.offset.left) < (mo.x + mo.width - mo.offset.right) && // 1️⃣ Linke Seite von Pepe ist links von rechter Seite vom Gegner
+         (this.x + this.width - this.offset.right) > (mo.x + mo.offset.left) && // 2️⃣ Rechte Seite von Pepe ist rechts von linker Seite vom Gegner
+         (this.y + this.offset.top) < (mo.y + mo.height - mo.offset.bottom) && // 3️⃣ Obere Seite von Pepe ist oberhalb der unteren Seite vom Gegner
+         (this.y + this.height - this.offset.bottom) > (mo.y + mo.offset.top); // 4️⃣ Untere Seite von Pepe ist unterhalb der oberen Seite vom Gegner
+}
+
+  hit() {
+    this.energy -= 5;
+    if (this.energy < 0) {
+      this.energy = 0;
+    } else {
+      this.lastHit = new Date().getTime();
+    }
+  }
+
+  isHurt() {
     let timepassed = new Date().getTime() - this.lastHit; // Dfference in ms
     timepassed = timepassed / 1000; //Difference in s
     return timepassed < 1;
   }
-  
+
   isDead() {
     return this.energy == 0;
   }
@@ -60,13 +60,10 @@ class MovableObject extends DrawableObject {
 
   moveRight() {
     this.x += this.speed;
-    
   }
 
   moveLeft() {
-    
-      this.x -= this.speed; //bewegen sich nach links, 60 mal pro sekunde wird 0.15pixel von x coordinate von wolke abgezogen
-            
+    this.x -= this.speed; //bewegen sich nach links, 60 mal pro sekunde wird 0.15pixel von x coordinate von wolke abgezogen
   }
 
   jump() {
