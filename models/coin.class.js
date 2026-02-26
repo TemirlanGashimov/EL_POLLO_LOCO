@@ -1,4 +1,6 @@
 class Coin extends MovableObject {
+
+    
   offset = {
     top: 52,
     left: 33,
