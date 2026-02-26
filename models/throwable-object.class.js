@@ -15,7 +15,7 @@ class ThrowableObject extends MovableObject {
     this.y = y;
     this.height = 70;
     this.width = 70;
-    this.trow();
+    this.throw();
     this.animate();
   }
 
@@ -25,7 +25,7 @@ class ThrowableObject extends MovableObject {
     }, 80);
   }
 
-  trow() {
+  throw() {
     this.speedY = 30;
     this.applyGravity();
     setInterval(() => {
