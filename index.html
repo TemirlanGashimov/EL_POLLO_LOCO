@@ -4,7 +4,10 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
-    <title>Document</title>
+    <link href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Rye&display=swap" rel="stylesheet">
+    <link href="https://fonts.googleapis.com/css2?family=Bungee&display=swap" rel="stylesheet">
+    <title>El Pollo Loco</title>
 
     <script src="models/drawable-object.class.js"></script>
     <script src="models/movable-object.class.js"></script>
@@ -15,6 +18,7 @@
     <script src="models/statusbar-coin.class.js"></script>
     <script src="models/statusbar-bottle.class.js"></script>
     <script src="models/coin.class.js"></script>
+    <script src="models/bottle.class.js"></script>
     <script src="models/world.class.js"></script>
     <script src="models/background-object.class.js"></script>
     <script src="models/keyboard.class.js"></script>
@@ -26,8 +30,18 @@
   </head>
 
   <body onload="init()">
-    <h1>El pollo loco</h1>
+    
 
+    <div id="game-wrapepr">
+
+        <div id="start-screen">
+            <h1>El pollo loco</h1>
+            <button id="start-btn">Start</button>
+        </div>
+
+   
     <canvas id="canvas" width="720" height="480"></canvas>
+     </div>
+
   </body>
 </html>
