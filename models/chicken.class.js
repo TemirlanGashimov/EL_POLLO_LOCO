@@ -4,7 +4,7 @@ class Chicken extends MovableObject {
   width = 85; //Breite von unseren chicken
 
   offset = {
-    top: 10,
+    top: 5,
     left: 5,
     right: 5,
     bottom: 5,
@@ -20,7 +20,7 @@ class Chicken extends MovableObject {
     super().loadImage("img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
     this.loadImages(this.IMAGES_WALKING);
 
-    this.x = 200 + Math.random() * 500 * 3; //Zahl zwischen 200 und 700
+    this.x = 200 + Math.random() * 700 * 3; //Zahl zwischen 200 und 700
     this.speed = 0.15 + Math.random() * 0.25; // jeder Hünnchen bekommt verschiedene geschwindidkeit
     this.animate();
   }
