@@ -10,8 +10,6 @@ class World {
   statusBarBottle = new StatusBarBottle();
   throwableObjects = [];
 
-  coin = new Coin();
-
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
@@ -47,8 +45,26 @@ class World {
       if (this.character.isColliding(enemy)) {
         this.character.hit();
         this.statusBarHealth.setPercentage(this.character.energy);
-        this.statusBarCoin.setPercentae(this.character.energy); // MUSS GEÄNDERT WERDEN
-        this.statusBarBottle.setPercentae(this.character.energy); // MUSS GEÄNDERT WERDEN
+      }
+    });
+
+    this.level.coins.forEach((coin, index) => {
+      if (this.character.isColliding(coin)) {
+        if (this.character.coin < 100) {
+          this.character.collectCoin();
+          this.level.coins.splice(index, 1);
+          this.statusBarCoin.setPercentage(this.character.coin);
+        }
+      }
+    });
+
+    this.level.bottles.forEach((bottle, indexBottels) => {
+      if (this.character.isColliding(bottle)) {
+        if (this.character.bottle < 100) {
+          this.character.collectBottle();
+          this.level.bottles.splice(indexBottels, 1);
+          this.statusBarBottle.setPercentae(this.character.bottle);
+        }
       }
     });
   }
@@ -70,7 +86,8 @@ class World {
     this.addToMap(this.character); //unsere caracter
     this.addObjectsToMap(this.level.clouds); // unsere wolken
     this.addObjectsToMap(this.level.enemies); // unsere genger, Chicken
-    this.addObjectsToMap(this.level.coins);
+    this.addObjectsToMap(this.level.coins); // unsere coins
+    this.addObjectsToMap(this.level.bottles); // unsere flaschen
     this.addObjectsToMap(this.throwableObjects); // unsere flasche
 
     this.ctx.translate(-this.camera_x, 0); // dadurch unsere kamear bewegt sich nach links
