@@ -25,28 +25,42 @@ class World {
 
   run() {
     setInterval(() => {
-      this.checkCollisions();
+    //   this.checkCollisions();
       this.checkThrowObjects();
     }, 200);
   }
 
   checkThrowObjects() {
-    if (this.keyboard.D) {
+    if (this.keyboard.D && this.character.bottle > 0) {
       let bottle = new ThrowableObject(
         this.character.x + 100,
-        this.character.y + 100,
+        this.character.y + 100
       );
       this.throwableObjects.push(bottle);
-    }
+      this.character.bottle -=10;
+      this.statusBarBottle.setPercentage(this.character.bottle);
+      this.keyboard.D = false;
+    } 
   }
 
   checkCollisions() {
-    this.level.enemies.forEach((enemy) => {
-      if (this.character.isColliding(enemy)) {
-        this.character.hit();
-        this.statusBarHealth.setPercentage(this.character.energy);
-      }
-    });
+    this.level.enemies.forEach((enemy, index) => { // ?????????????????????????
+    if (this.character.isColliding(enemy)) {
+
+        // Wenn wir fallen dann töten
+        if (this.character.speedY < 0) {
+
+            this.level.enemies.splice(index, 1);
+            this.character.speedY = 20;
+
+        } else {
+
+            this.character.hit();
+            this.statusBarHealth.setPercentage(this.character.energy);
+
+        }
+    }
+});
 
     this.level.coins.forEach((coin, index) => {
       if (this.character.isColliding(coin)) {
@@ -63,14 +77,33 @@ class World {
         if (this.character.bottle < 100) {
           this.character.collectBottle();
           this.level.bottles.splice(indexBottels, 1);
-          this.statusBarBottle.setPercentae(this.character.bottle);
+          this.statusBarBottle.setPercentage(this.character.bottle);
         }
       }
     });
   }
 
+
+
+  checkBuyBottle() {
+    if (this.keyboard.F){
+        if(this.character.coin >= 20 && this.character.bottle < 100) {
+            this.character.coin -=20;
+            this.character.bottle +=10;
+
+            this.statusBarCoin.setPercentage(this.character.coin);
+            this.statusBarBottle.setPercentage(this.character.bottle);
+        }
+        this.keyboard.F = false;
+    }
+  }
+
+
+
   // Draw() wird immer wieder aufgerufen
   draw() {
+
+    this.checkCollisions();
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // canvas wird gelöscht
 
     this.ctx.translate(this.camera_x, 0); // dadurch bewegt sich die kamera nach rechts
@@ -81,6 +114,15 @@ class World {
     this.addToMap(this.statusBarHealth);
     this.addToMap(this.statusBarCoin);
     this.addToMap(this.statusBarBottle);
+    this.ctx.font = "20px Arial";
+    this.ctx.fillStyle = "white";
+
+    this.ctx.fillText(this.character.energy, 230, 45);
+    this.ctx.fillText((this.character.coin / 10) + " /10", 230, 85);
+    this.ctx.fillText((this.character.bottle / 10) + " / 10", 230, 125);
+
+    this.checkBuyBottle();
+
     this.ctx.translate(this.camera_x, 0); // Forwards
 
     this.addToMap(this.character); //unsere caracter
