@@ -26,7 +26,7 @@ class DrawableObject {
   }
 
   drawFrame(ctx) {
-    if (this instanceof Character ||this instanceof Chicken ||this instanceof Endboss ||this instanceof Coin) {
+    if (this instanceof Character ||this instanceof Chicken ||this instanceof Endboss ||this instanceof Coin || this instanceof Bottle) {
      
         // damit übergeben wird die unten definierte code dass der die Chicken Character coins und Endboss in Käschen nimmt
       ctx.beginPath();
