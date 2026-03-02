@@ -1,6 +1,6 @@
 class Coin extends MovableObject {
 
-    
+
   offset = {
     top: 52,
     left: 33,
@@ -16,7 +16,7 @@ class Coin extends MovableObject {
     super().loadImage('img/8_coin/coin_1.png');
     this.loadImages(this.IMAGES_COIN);
 
-    this.x = 200 + Math.random() * 500 * 3;
+    this.x = 200 + Math.random() * 600 * 3;
     this.animate();
   }
 
