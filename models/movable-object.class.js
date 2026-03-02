@@ -5,6 +5,8 @@ class MovableObject extends DrawableObject {
   acceleration = 2.5;
   energy = 100;
   lastHit = 0;
+  coin = 0; 
+  bottle = 0;
 
   applyGravity() {
     setInterval(() => {
@@ -26,11 +28,13 @@ class MovableObject extends DrawableObject {
 
   //character.isColliding(chicken);
   isColliding(mo) {
-  return (this.x + this.offset.left) < (mo.x + mo.width - mo.offset.right) && // 1️⃣ Linke Seite von Pepe ist links von rechter Seite vom Gegner
-         (this.x + this.width - this.offset.right) > (mo.x + mo.offset.left) && // 2️⃣ Rechte Seite von Pepe ist rechts von linker Seite vom Gegner
-         (this.y + this.offset.top) < (mo.y + mo.height - mo.offset.bottom) && // 3️⃣ Obere Seite von Pepe ist oberhalb der unteren Seite vom Gegner
-         (this.y + this.height - this.offset.bottom) > (mo.y + mo.offset.top); // 4️⃣ Untere Seite von Pepe ist unterhalb der oberen Seite vom Gegner
-}
+    return (
+      this.x + this.offset.left < mo.x + mo.width - mo.offset.right && // 1️⃣ Linke Seite von Pepe ist links von rechter Seite vom Gegner
+      this.x + this.width - this.offset.right > mo.x + mo.offset.left && // 2️⃣ Rechte Seite von Pepe ist rechts von linker Seite vom Gegner
+      this.y + this.offset.top < mo.y + mo.height - mo.offset.bottom && // 3️⃣ Obere Seite von Pepe ist oberhalb der unteren Seite vom Gegner
+      this.y + this.height - this.offset.bottom > mo.y + mo.offset.top
+    ); // 4️⃣ Untere Seite von Pepe ist unterhalb der oberen Seite vom Gegner
+  }
 
   hit() {
     this.energy -= 5;
@@ -38,6 +42,20 @@ class MovableObject extends DrawableObject {
       this.energy = 0;
     } else {
       this.lastHit = new Date().getTime();
+    }
+  }
+
+  collectCoin() {
+    this.coin += 10;
+    if (this.coin > 100) {
+        this.coin = 100;
+    }
+  }
+
+  collectBottle(){
+    this.bottle +=10;
+    if(this.coin > 100) {
+        this.coin = 100;
     }
   }
 
