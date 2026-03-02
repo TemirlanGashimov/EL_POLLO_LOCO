@@ -2,6 +2,14 @@ let canvas;
 let world;
 let keyboard = new Keyboard();
 
+// const startScreen = document.getElementById('start-screen');
+// const startButton = document.getElementById('start-btn');
+// startButton.addEventListener('click', () =>{
+//     startScreen.style.display ='none';
+//     startGame();
+// });
+
+
 
 function init(){
     canvas = document.getElementById('canvas');
