@@ -3,12 +3,14 @@ class Character extends MovableObject {
   y = 30;
   speed = 10;
   idleTime = 0;
+  coins = 0;
+  bottles = 0;
 
   offset = {
-    top: 100,
-    left: 30,
+    top: 150,
+    left: 20,
     right: 30,
-    bottom: 20,
+    bottom: 15
   };
 
   IMAGES_IDLE = [
