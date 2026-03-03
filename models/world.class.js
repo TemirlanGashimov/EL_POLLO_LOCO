@@ -103,6 +103,11 @@ class World {
   // Draw() wird immer wieder aufgerufen
   draw() {
 
+    if(this.character.isDead()) {
+        document.getElementById("game-over-screen").style.display="flex";
+        return;
+    }
+
     this.checkCollisions();
     this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // canvas wird gelöscht
 
