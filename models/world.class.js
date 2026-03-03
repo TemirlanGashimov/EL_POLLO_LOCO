@@ -8,6 +8,7 @@ class World {
   statusBarHealth = new StatusBarHealth();
   statusBarCoin = new StatusBarCoin();
   statusBarBottle = new StatusBarBottle();
+  statusBarEndboss = new StatusBarEndboss();
   throwableObjects = [];
 
   constructor(canvas, keyboard) {
@@ -125,6 +126,7 @@ class World {
     this.addToMap(this.statusBarHealth);
     this.addToMap(this.statusBarCoin);
     this.addToMap(this.statusBarBottle);
+    this.addToMap(this.statusBarEndboss);
     this.ctx.font = "20px Arial";
     this.ctx.fillStyle = "white";
 
