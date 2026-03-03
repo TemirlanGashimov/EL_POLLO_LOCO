@@ -2,6 +2,7 @@ class Chicken extends MovableObject {
   y = 370; // platzierung auf y Achse // sobald die höche sich änder muss man auch die y Achse ändern damit die auf eine ebene sind +-
   height = 50; // höche von unsere chicken wie hoch/groß die sind
   width = 85; //Breite von unseren chicken
+  isDeadChicken = false;
 
   offset = {
     top: 5,
@@ -16,22 +17,46 @@ class Chicken extends MovableObject {
     "img/3_enemies_chicken/chicken_normal/1_walk/3_w.png",
   ];
 
+  IMAGES_DEAD = [
+    "img/3_enemies_chicken/chicken_normal/2_dead/dead.png"
+  ];
+
+  chickenDead_sound = new Audio ("sounds/chicken/chickenDead.mp3")
+
   constructor() {
     super().loadImage("img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
     this.loadImages(this.IMAGES_WALKING);
 
-    this.x = 200 + Math.random() * 700 * 3; //Zahl zwischen 200 und 700
+    this.loadImages(this.IMAGES_DEAD);
+    this.chickenDead_sound.volume = 0.5;
+
+    this.x = 200 + Math.random() * 2300; //Zahl zwischen 200 und 700
     this.speed = 0.15 + Math.random() * 0.25; // jeder Hünnchen bekommt verschiedene geschwindidkeit
     this.animate();
   }
 
+  die(){
+    if (!this.isDeadChicken){
+    this.isDeadChicken = true;
+    this.speed = 0;
+    this.playAnimation(this.IMAGES_DEAD);
+    this.chickenDead_sound.play();
+    }
+  }
+
   animate() {
     setInterval(() => {
-      this.moveLeft();
+      if(!this.isDeadChicken){
+        this.moveLeft();
+      }
     }, 1000 / 60); // 60 mal pro sekunde
 
     setInterval(() => {
-      this.playAnimation(this.IMAGES_WALKING);
-    }, 200);
+  if (this.isDeadChicken) {
+    this.playAnimation(this.IMAGES_DEAD);
+  } else {
+    this.playAnimation(this.IMAGES_WALKING);
+  }
+}, 200);
   }
 }
