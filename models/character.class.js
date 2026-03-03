@@ -91,7 +91,7 @@ class Character extends MovableObject {
     this.loadImages(this.IMAGES_IDLE);
 
     this.loadImages(this.IMAGES_SLEEP);
-    this.sleeping_sound.volume = 0.01;
+    this.sleeping_sound.volume = 0.05;
     this.sleeping_sound.loop = true;
 
     this.loadImages(this.IMAGES_WALKING);
