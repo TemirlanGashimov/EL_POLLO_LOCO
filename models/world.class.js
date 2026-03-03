@@ -44,23 +44,29 @@ class World {
   }
 
   checkCollisions() {
-    this.level.enemies.forEach((enemy, index) => { // ?????????????????????????
-    if (this.character.isColliding(enemy)) {
+    this.level.enemies.forEach((enemy, index) => {
 
-        // Wenn wir fallen dann töten
-        if (this.character.speedY < 0) {
+        if (this.character.isColliding(enemy) && !enemy.isDeadChicken) {
 
+    if (
+        this.character.speedY < 0 &&
+        this.character.y < enemy.y
+    ) {
+
+        this.character.speedY = 20;
+        enemy.die();
+
+        setTimeout(() => {
             this.level.enemies.splice(index, 1);
-            this.character.speedY = 20;
+        }, 800);
 
-        } else {
+    } else {
 
-            this.character.hit();
-            this.statusBarHealth.setPercentage(this.character.energy);
-
-        }
+        this.character.hit();
+        this.statusBarHealth.setPercentage(this.character.energy);
     }
-});
+}
+    });
 
     this.level.coins.forEach((coin, index) => {
       if (this.character.isColliding(coin)) {
