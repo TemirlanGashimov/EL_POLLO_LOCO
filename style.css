@@ -87,6 +87,32 @@ canvas {
 
 
 
+#game-over-screen {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 720px;
+    height: 480px;
+    background: rgba(0, 0, 0, 0.7);
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    align-items: center;
+}
+
+#game-over-screen img {
+    width: 80%;
+}
+
+#game-over-screen button {
+    margin-top: 20px;
+    padding: 10px 20px;
+    font-size: 20px;
+    cursor: pointer;
+}
+
+
+
 @media only screen and (max-width: 720px) {
     canvas {
         width: 100%;
