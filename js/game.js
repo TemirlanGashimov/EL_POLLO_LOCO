@@ -18,6 +18,10 @@ function init(){
     console.log('My Character is', world.character);  
 }
 
+function restartGame(){
+    location.reload();
+}
+
 window.addEventListener("keydown", (e) => {
     
     if(e.keyCode == 39){
