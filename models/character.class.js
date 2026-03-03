@@ -79,9 +79,11 @@ class Character extends MovableObject {
   world;
   walking_sound = new Audio("sounds/character/characterRun.mp3");
   sleeping_sound = new Audio("sounds/character/characterSnoring.mp3");
-  jumping_sound = new Audio ("sounds/character/characterJump.wav");
+  jumping_sound = new Audio("sounds/character/characterJump.wav");
   hurts_sound = new Audio("sounds/character/characterDamage.mp3");
-  deads_sound = new Audio ("/sounds/character/characterDead.wav");
+  deads_sound = new Audio("/sounds/character/characterDead.wav");
+  coinCollect_sound = new Audio("sounds/collectibles/collectSound.wav");
+  bottleCollect_sound = new Audio("sounds/collectibles/bottleCollectSound.wav");
 
   constructor() {
     super().loadImage("img/2_character_pepe/2_walk/W-21.png");
@@ -112,8 +114,7 @@ class Character extends MovableObject {
 
   animate() {
     setInterval(() => {
-
-        let isMoving = false;
+      let isMoving = false;
 
       if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
         this.moveRight(); // hier Charakter schaut nach vorne
@@ -127,11 +128,11 @@ class Character extends MovableObject {
         isMoving = true;
       }
 
-      if (isMoving && !this.isAboveGround()){
-        if (this.walking_sound.paused){
-            this.walking_sound.play();
+      if (isMoving && !this.isAboveGround()) {
+        if (this.walking_sound.paused) {
+          this.walking_sound.play();
         }
-      }else {
+      } else {
         this.walking_sound.pause();
         this.walking_sound.currentTime = 0;
       }
@@ -139,43 +140,37 @@ class Character extends MovableObject {
       if (this.world.keyboard.SPACE && !this.isAboveGround()) {
         this.jump();
 
-       if (this.jumping_sound.paused) {
-        this.jumping_sound.play();
-       }
-    }
+        if (this.jumping_sound.paused) {
+          this.jumping_sound.play();
+        }
+      }
 
       this.world.camera_x = -this.x + 100;
     }, 1000 / 60);
 
     setInterval(() => {
-
       if (this.isDead()) {
         this.playAnimation(this.IMAGES_DEAD);
-        if (this.deads_sound.paused){
-            this.deads_sound.play();
-        } 
-      
-    } else if (this.isHurt()) {
+        if (this.deads_sound.paused) {
+          this.deads_sound.play();
+        }
+      } else if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
-      
-    } else if (this.isAboveGround()) {
+      } else if (this.isAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPIMG);
         if (!this.sleeping_sound.paused) {
-            this.sleeping_sound.pause();
-            this.sleeping_sound.currentTime = 0;
+          this.sleeping_sound.pause();
+          this.sleeping_sound.currentTime = 0;
         }
-
       } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
         //Walk Animation
         this.playAnimation(this.IMAGES_WALKING);
         this.idleTime = 0; //сброс таймера
 
-        if(!this.sleeping_sound.paused){
-            this.sleeping_sound.pause();
-            this.sleeping_sound.currentTime = 0;
+        if (!this.sleeping_sound.paused) {
+          this.sleeping_sound.pause();
+          this.sleeping_sound.currentTime = 0;
         }
-
-
       } else {
         this.idleTime += 120; // увеличиваем счетчик
 
@@ -185,7 +180,6 @@ class Character extends MovableObject {
           if (this.sleeping_sound.paused) {
             this.sleeping_sound.play();
           }
-
         } else {
           this.playAnimation(this.IMAGES_IDLE);
           if (!this.sleeping_sound.paused) {
@@ -199,5 +193,19 @@ class Character extends MovableObject {
 
   jump() {
     this.speedY = 30;
+  }
+
+  collectCoin() {
+    this.coin += 10;
+    this.coinCollect_sound.currentTime = 0;
+    this.coinCollect_sound.play();
+  }
+
+  collectBottle() {
+    if (this.bottle < 100) {
+      this.bottle += 10;
+      this.bottleCollect_sound.currentTime = 0;
+      this.bottleCollect_sound.play();
+    }
   }
 }
