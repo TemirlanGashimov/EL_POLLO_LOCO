@@ -25,6 +25,7 @@ class ThrowableObject extends MovableObject {
       "img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
     );
     this.loadImages(this.IMAGES_BOTTLE);
+    this.loadImages(this.SPLASH_IMAGES);
     this.x = x;
     this.y = y;
     this.height = 70;
@@ -57,14 +58,21 @@ class ThrowableObject extends MovableObject {
 
   break() {
     if (this.isBroken) return;
-
     this.isBroken = true;
-
     clearInterval(this.throwInterval);
-
     this.speedY = 0;
-
     this.bottleBreak_sound.currentTime = 0;
     this.bottleBreak_sound.play();
+  }
+
+  splash() {
+    this.speedX = 0;
+    this.speedY = 0;
+
+    this.playAnimation(this.SPLASH_IMAGES);
+
+    setTimeout(() => {
+      this.isBroken = true;
+    }, 150);
   }
 }
