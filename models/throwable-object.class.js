@@ -20,7 +20,7 @@ class ThrowableObject extends MovableObject {
 
   bottleBreak_sound = new Audio("sounds/throwable/bottleBreak.mp3");
 
-  constructor(x, y) {
+  constructor(x, y, otherDirection) {
     super().loadImage(
       "img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
     );
@@ -30,26 +30,28 @@ class ThrowableObject extends MovableObject {
     this.y = y;
     this.height = 70;
     this.width = 70;
+    this.otherDirection = otherDirection;
     this.throw();
     this.animate();
   }
 
   animate() {
     setInterval(() => {
-      this.playAnimation(this.IMAGES_BOTTLE);
+      if (!this.isBroken) {
+        this.playAnimation(this.IMAGES_BOTTLE);
+      }
     }, 80);
   }
 
   throw() {
-    this.speedY = 30;
+    this.speedY = 25;
     this.applyGravity();
     this.throwInterval = setInterval(() => {
       //das hier nur die bewegund von flasche
       if (!this.isBroken) {
-        this.x += 8; // kleinere schritte am fliegen
+        this.x += this.otherDirection ? -8 : 8;
 
-        if (this.y >= 140) {
-          this.y = 140;
+        if (this.y >= 360) {
           this.break();
         }
       }
@@ -58,11 +60,32 @@ class ThrowableObject extends MovableObject {
 
   break() {
     if (this.isBroken) return;
+
     this.isBroken = true;
+
     clearInterval(this.throwInterval);
+
     this.speedY = 0;
+    this.speedX = 0;
+
     this.bottleBreak_sound.currentTime = 0;
-    this.bottleBreak_sound.play();
+    this.bottleBreak_sound.play().catch(() => {});
+
+    let i = 0;
+
+    let splashInterval = setInterval(() => {
+      this.img = this.imageCache[this.SPLASH_IMAGES[i]];
+      i++;
+
+      if (i >= this.SPLASH_IMAGES.length) {
+        clearInterval(splashInterval);
+
+        //  HIER entfernen wir die Flasche aus der World
+        setTimeout(() => {
+          this.markedForDeletion = true;
+        }, 200);
+      }
+    }, 60);
   }
 
   splash() {
