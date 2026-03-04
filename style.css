@@ -85,6 +85,21 @@ canvas {
     max-height: 100%;
 }
 
+#victory-screen{
+    position:absolute;
+    top:0;
+    left:0;
+    width:100%;
+    height:100%;
+    background:black;
+    color:white;
+    display:none;
+    justify-content:center;
+    align-items:center;
+    font-size:60px;
+    z-index:1000;
+}
+
 
 
 #game-over-screen {
