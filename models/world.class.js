@@ -17,8 +17,8 @@ class World {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
-    this.setWorld();
     this.boss = this.level.enemies.find((e) => e instanceof Endboss);
+    this.setWorld();
     this.draw();
     this.run();
   }
