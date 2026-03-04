@@ -1,25 +1,38 @@
 let canvas;
 let world;
 let keyboard = new Keyboard();
-
-// const startScreen = document.getElementById('start-screen');
-// const startButton = document.getElementById('start-btn');
-// startButton.addEventListener('click', () =>{
-//     startScreen.style.display ='none';
-//     startGame();
-// });
-
-
+let gameRunning = true;
 
 function init(){
     canvas = document.getElementById('canvas');
+
+    document.getElementById("start-btn").addEventListener("click", startGame);
+}
+
+function startGame(){
+    document.getElementById("start-screen").style.display = "none";
+    document.getElementById("canvas").style.display = "block";
+
+    canvas = document.getElementById('canvas');
     world = new World(canvas, keyboard);
-    
-    console.log('My Character is', world.character);  
+}
+
+function showGameOver(){
+    document.getElementById("canvas").style.display = "none";
+    document.getElementById("game-over-screen").style.display = "block";
+}
+
+function showVictory(){
+    document.getElementById("canvas").style.display = "none";
+    document.getElementById("victory-screen").style.display = "block";
 }
 
 function restartGame(){
-    location.reload();
+    document.getElementById("victory-screen").style.display = "none";
+    document.getElementById("game-over-screen").style.display = "none";
+    document.getElementById("canvas").style.display = "block";
+
+    world = new World(canvas,keyboard);
 }
 
 window.addEventListener("keydown", (e) => {
