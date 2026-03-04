@@ -4,6 +4,8 @@ class Endboss extends MovableObject {
     width = 250;
     y = 50;
     energy = 100;
+    isDead = false;
+    isHurt = false;
 
      offset = {
         top: 70,
@@ -69,14 +71,35 @@ class Endboss extends MovableObject {
 
     animate(){
         setInterval(() => {
+            if (this.isDead){
+                this.playAnimation(this.IMAGES_DEAD);
+            } else if (this.isHurt) {
+                this.playAnimation(this.IMAGES_HURT);
+            }else  {
             this.playAnimation(this.IMAGES_WALKING);
+            }
         }, 200);
+        
+        setInterval(() => {
+        this.x -2;
+    }, 1000/60)
     }
 
+    
+
     hit() {
-        this.energy -=20;
-        if(this.energy < 0) {
+        if(this.energy > 0){
+        this.energy -= 20;
+        this.isHurt = true;
+
+        setTimeout(() => {
+            this.isHurt = false;
+        }, 400);
+        }
+
+        if(this.energy <= 0) {
             this.energy = 0;
+            this.isDead = true;
         }
     }
 
