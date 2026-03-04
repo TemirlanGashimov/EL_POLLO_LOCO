@@ -140,10 +140,12 @@ class Endboss extends MovableObject {
   }
 
   isPlayerNear() {
-    return Math.abs(this.x - this.world.character.x) < 600;
-  }
+  if (!this.world) return false;
+  return Math.abs(this.x - this.world.character.x) < 600;
+}
 
   isPlayerVeryNear() {
-    return Math.abs(this.x - this.world.character.x) < 200;
-  }
+  if (!this.world) return false;
+  return Math.abs(this.x - this.world.character.x) < 200;
+}
 }
