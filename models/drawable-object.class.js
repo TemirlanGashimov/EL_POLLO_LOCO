@@ -26,19 +26,24 @@ class DrawableObject {
   }
 
   drawFrame(ctx) {
-    if (this instanceof Character ||this instanceof Chicken ||this instanceof Endboss ||this instanceof Coin || this instanceof Bottle) {
-     
-        // damit übergeben wird die unten definierte code dass der die Chicken Character coins und Endboss in Käschen nimmt
+    if (
+      this instanceof Character ||
+      this instanceof Chicken ||
+      this instanceof Endboss ||
+      this instanceof Coin ||
+      this instanceof Bottle
+    ) {
+      // damit übergeben wird die unten definierte code dass der die Chicken Character coins und Endboss in Käschen nimmt
       ctx.beginPath();
       ctx.lineWidth = "2";
       ctx.strokeStyle = "red";
 
       ctx.rect(
-        this.x + this.offset.left, 
+        this.x + this.offset.left,
         this.y + this.offset.top,
-        this.width - this.offset.left - this.offset.right, 
-        this.height - this.offset.top - this.offset.bottom
-    );
+        this.width - this.offset.left - this.offset.right,
+        this.height - this.offset.top - this.offset.bottom,
+      );
       ctx.stroke();
     }
   }
