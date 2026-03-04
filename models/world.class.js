@@ -1,9 +1,10 @@
 class World {
   character = new Character();
-  level = level1;
+  level;
   canvas;
   ctx;
   keyboard;
+  gameRunning = true;
   camera_x = 0;
   statusBarHealth = new StatusBarHealth();
   statusBarCoin = new StatusBarCoin();
@@ -12,11 +13,13 @@ class World {
   bossFightStarted = false;
   boss = null;
   throwableObjects = [];
+  intervalId;
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
+    this.level = createLevel1();
     this.boss = this.level.enemies.find((e) => e instanceof Endboss);
     this.setWorld();
     this.draw();
@@ -31,7 +34,8 @@ class World {
   }
 
   run() {
-    setInterval(() => {
+    this.intervalId = setInterval(() => {
+      if (!this.gameRunning) return;
       //   this.checkCollisions();
       this.checkThrowObjects();
       this.checkBottleBossCollision();
@@ -110,35 +114,35 @@ class World {
     }
   }
 
-  checkBottleEnemyCollision(){
+  checkBottleEnemyCollision() {
     this.throwableObjects.forEach((bottle) => {
-      this.level.enemies.forEach((enemy,index) =>{
-        if(!(enemy instanceof Endboss)&&
-      bottle.isColliding(enemy)&&
-    !bottle.isBroken){
-      enemy.die();
-      bottle.break();
+      this.level.enemies.forEach((enemy, index) => {
+        if (
+          !(enemy instanceof Endboss) &&
+          bottle.isColliding(enemy) &&
+          !bottle.isBroken
+        ) {
+          enemy.die();
+          bottle.break();
 
-      setTimeout(() => {
-        this.level.enemies.splice(index, 1);
-      }, 500);
-    }
+          setTimeout(() => {
+            this.level.enemies.splice(index, 1);
+          }, 500);
+        }
       });
     });
   }
 
   checkBossTrigger() {
-  if (!this.boss) return;
+    if (!this.boss) return;
 
-  if (this.character.x > this.boss.x - 400 && !this.bossFightStarted) {
+    if (this.character.x > this.boss.x - 400 && !this.bossFightStarted) {
+      this.bossFightStarted = true;
 
-    this.bossFightStarted = true;
-
-    this.boss.endbossApproach_sound.currentTime = 0;
-    this.boss.endbossApproach_sound.play().catch(() => {});
-
+      this.boss.endbossApproach_sound.currentTime = 0;
+      this.boss.endbossApproach_sound.play().catch(() => {});
+    }
   }
-}
 
   checkBottleBossCollision() {
     if (!this.boss) return;
@@ -154,18 +158,26 @@ class World {
   }
 
   checkBossDead() {
-    if (!this.boss) return;
+  if (!this.boss) return;
 
-    if (this.boss.isDead) {
-      setTimeout(() => {
-        document.getElementById("victory-screen").style.display = "flex";
-      }, 1500);
-    }
+  if (this.boss.isDead && this.gameRunning) {
+
+    setTimeout(() => {
+      this.gameRunning = false;
+      clearInterval(this.intervalId);
+      document.getElementById("victory-screen").style.display = "flex";
+    }, 1500);
+
   }
+}
 
   // Draw() wird immer wieder aufgerufen
   draw() {
+    if (!this.gameRunning) return;
+
     if (this.character.isDead()) {
+      this.gameRunning = false;
+      clearInterval(this.intervalId);
       document.getElementById("game-over-screen").style.display = "flex";
       return;
     }
@@ -205,10 +217,11 @@ class World {
 
     this.ctx.translate(-this.camera_x, 0); // dadurch unsere kamear bewegt sich nach links
 
-    let self = this;
-    requestAnimationFrame(function () {
-      self.draw();
-    });
+    if (this.gameRunning) {
+      requestAnimationFrame(() => {
+        this.draw();
+      });
+    }
   }
 
   addObjectsToMap(objects) {
