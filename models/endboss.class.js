@@ -9,6 +9,8 @@ class Endboss extends MovableObject {
   lastAttack = 0;
   lastHit = 0;
 
+  endbossApproach_sound = new Audio("sounds/endboss/endbossApproach.wav");
+
   offset = {
     top: 70,
     left: 30,
