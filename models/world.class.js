@@ -115,13 +115,12 @@ class World {
   checkBottleBossCollision() {
     if (!this.boss) return;
 
-    this.throwableObjects.forEach((bottle, index) => {
+    this.throwableObjects.forEach((bottle) => {
       if (!bottle.isBroken && bottle.isColliding(this.boss)) {
         this.boss.hit();
         this.statusBarEndboss.setPercentage(this.boss.energy);
 
-        bottle.isBroken = true;
-        this.throwableObjects.splice(index, 1);
+        bottle.splash();
       }
     });
   }
@@ -131,8 +130,8 @@ class World {
 
     if (this.boss.isDead) {
       setTimeout(() => {
-        this.boss.x = 10000;
-      }, 2000);
+        document.getElementById("victory-screen").style.display = "flex";
+      }, 1500);
     }
   }
 
