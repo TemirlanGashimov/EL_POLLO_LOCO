@@ -9,25 +9,34 @@ class World {
   statusBarCoin = new StatusBarCoin();
   statusBarBottle = new StatusBarBottle();
   statusBarEndboss = new StatusBarEndboss();
+  bossFightStarted = false;
+  boss = null;
   throwableObjects = [];
 
   constructor(canvas, keyboard) {
     this.ctx = canvas.getContext("2d");
     this.canvas = canvas;
     this.keyboard = keyboard;
-    this.draw();
     this.setWorld();
+    this.boss = this.level.enemies.find((e) => e instanceof Endboss);
+    this.draw();
     this.run();
   }
 
   setWorld() {
     this.character.world = this;
+    this.level.enemies.forEach((enemy) => {
+      enemy.world = this;
+    });
   }
 
   run() {
     setInterval(() => {
-    //   this.checkCollisions();
+      //   this.checkCollisions();
       this.checkThrowObjects();
+      this.checkBottleBossCollision();
+      this.checkBossTrigger();
+      this.checkBossDead();
     }, 200);
   }
 
@@ -35,38 +44,30 @@ class World {
     if (this.keyboard.D && this.character.bottle > 0) {
       let bottle = new ThrowableObject(
         this.character.x + 100,
-        this.character.y + 100
+        this.character.y + 100,
       );
       this.throwableObjects.push(bottle);
-      this.character.bottle -=10;
+      this.character.bottle -= 10;
       this.statusBarBottle.setPercentage(this.character.bottle);
       this.keyboard.D = false;
-    } 
+    }
   }
 
   checkCollisions() {
     this.level.enemies.forEach((enemy, index) => {
+      if (this.character.isColliding(enemy) && !enemy.isDeadChicken) {
+        if (this.character.speedY < 0 && this.character.y < enemy.y) {
+          this.character.speedY = 20;
+          enemy.die();
 
-        if (this.character.isColliding(enemy) && !enemy.isDeadChicken) {
-
-    if (
-        this.character.speedY < 0 &&
-        this.character.y < enemy.y
-    ) {
-
-        this.character.speedY = 20;
-        enemy.die();
-
-        setTimeout(() => {
+          setTimeout(() => {
             this.level.enemies.splice(index, 1);
-        }, 800);
-
-    } else {
-
-        this.character.hit();
-        this.statusBarHealth.setPercentage(this.character.energy);
-    }
-}
+          }, 800);
+        } else {
+          this.character.hit();
+          this.statusBarHealth.setPercentage(this.character.energy);
+        }
+      }
     });
 
     this.level.coins.forEach((coin, index) => {
@@ -90,29 +91,56 @@ class World {
     });
   }
 
-
-
   checkBuyBottle() {
-    if (this.keyboard.F){
-        if(this.character.coin >= 20 && this.character.bottle < 100) {
-            this.character.coin -=20;
-            this.character.bottle +=10;
+    if (this.keyboard.F) {
+      if (this.character.coin >= 20 && this.character.bottle < 100) {
+        this.character.coin -= 20;
+        this.character.bottle += 10;
 
-            this.statusBarCoin.setPercentage(this.character.coin);
-            this.statusBarBottle.setPercentage(this.character.bottle);
-        }
-        this.keyboard.F = false;
+        this.statusBarCoin.setPercentage(this.character.coin);
+        this.statusBarBottle.setPercentage(this.character.bottle);
+      }
+      this.keyboard.F = false;
     }
   }
 
+  checkBossTrigger() {
+    if (!this.boss) return;
 
+    if (this.character.x > this.boss.x - 400) {
+      this.bossFightStarted = true;
+    }
+  }
+
+  checkBottleBossCollision() {
+    if (!this.boss) return;
+
+    this.throwableObjects.forEach((bottle, index) => {
+      if (!bottle.isBroken && bottle.isColliding(this.boss)) {
+        this.boss.hit();
+        this.statusBarEndboss.setPercentage(this.boss.energy);
+
+        bottle.isBroken = true;
+        this.throwableObjects.splice(index, 1);
+      }
+    });
+  }
+
+  checkBossDead() {
+    if (!this.boss) return;
+
+    if (this.boss.isDead) {
+      setTimeout(() => {
+        this.boss.x = 10000;
+      }, 2000);
+    }
+  }
 
   // Draw() wird immer wieder aufgerufen
   draw() {
-
-    if(this.character.isDead()) {
-        document.getElementById("game-over-screen").style.display="flex";
-        return;
+    if (this.character.isDead()) {
+      document.getElementById("game-over-screen").style.display = "flex";
+      return;
     }
 
     this.checkCollisions();
@@ -126,13 +154,16 @@ class World {
     this.addToMap(this.statusBarHealth);
     this.addToMap(this.statusBarCoin);
     this.addToMap(this.statusBarBottle);
-    this.addToMap(this.statusBarEndboss);
+    if (this.bossFightStarted) {
+      this.addToMap(this.statusBarEndboss);
+    }
+
     this.ctx.font = "20px Arial";
     this.ctx.fillStyle = "white";
 
     this.ctx.fillText(this.character.energy, 230, 45);
-    this.ctx.fillText((this.character.coin / 10) + " /10", 230, 85);
-    this.ctx.fillText((this.character.bottle / 10) + " / 10", 230, 125);
+    this.ctx.fillText(this.character.coin / 10 + " /10", 230, 85);
+    this.ctx.fillText(this.character.bottle / 10 + " / 10", 230, 125);
 
     this.checkBuyBottle();
 
