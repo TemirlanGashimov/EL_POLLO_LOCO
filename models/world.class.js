@@ -35,8 +35,13 @@ class World {
       //   this.checkCollisions();
       this.checkThrowObjects();
       this.checkBottleBossCollision();
+      this.checkBottleEnemyCollision();
       this.checkBossTrigger();
       this.checkBossDead();
+
+      this.throwableObjects = this.throwableObjects.filter(
+        (bottle) => !bottle.markedForDeletion,
+      );
     }, 200);
   }
 
@@ -45,6 +50,7 @@ class World {
       let bottle = new ThrowableObject(
         this.character.x + 100,
         this.character.y + 100,
+        this.character.otherDirection,
       );
       this.throwableObjects.push(bottle);
       this.character.bottle -= 10;
@@ -104,23 +110,45 @@ class World {
     }
   }
 
-  checkBossTrigger() {
-    if (!this.boss) return;
+  checkBottleEnemyCollision(){
+    this.throwableObjects.forEach((bottle) => {
+      this.level.enemies.forEach((enemy,index) =>{
+        if(!(enemy instanceof Endboss)&&
+      bottle.isColliding(enemy)&&
+    !bottle.isBroken){
+      enemy.die();
+      bottle.break();
 
-    if (this.character.x > this.boss.x - 400) {
-      this.bossFightStarted = true;
+      setTimeout(() => {
+        this.level.enemies.splice(index, 1);
+      }, 500);
     }
+      });
+    });
   }
+
+  checkBossTrigger() {
+  if (!this.boss) return;
+
+  if (this.character.x > this.boss.x - 400 && !this.bossFightStarted) {
+
+    this.bossFightStarted = true;
+
+    this.boss.endbossApproach_sound.currentTime = 0;
+    this.boss.endbossApproach_sound.play().catch(() => {});
+
+  }
+}
 
   checkBottleBossCollision() {
     if (!this.boss) return;
 
     this.throwableObjects.forEach((bottle) => {
-      if (!bottle.isBroken && bottle.isColliding(this.boss)) {
+      if (bottle.isColliding(this.boss) && !bottle.isBroken) {
         this.boss.hit();
-        this.statusBarEndboss.setPercentage(this.boss.energy);
+        bottle.break();
 
-        bottle.splash();
+        this.statusBarEndboss.setPercentage(this.boss.energy);
       }
     });
   }
