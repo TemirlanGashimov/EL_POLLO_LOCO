@@ -68,8 +68,10 @@ class ThrowableObject extends MovableObject {
     this.speedY = 0;
     this.speedX = 0;
 
+    if (soundEnabled){
     this.bottleBreak_sound.currentTime = 0;
     this.bottleBreak_sound.play().catch(() => {});
+    }
 
     let i = 0;
 
