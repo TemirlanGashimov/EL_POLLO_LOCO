@@ -82,18 +82,29 @@ class World {
 
     } else {
 
-        if (!this.character.isHurt()){
+        if (!this.character.isHurt()) {
 
-          if(enemy instanceof Endboss){
-            this.character.energy -= 20;
-          }else {
-            this.character.energy -= 5;
-          }
-          if (this.character.energy <0) {
-            this.character.energy = 0;
-          }
-        this.character.lastHit = new Date().getTime();
-        this.statusBarHealth.setPercentage(this.character.energy);
+    let damage = 0;
+
+    if (enemy instanceof Endboss) {
+        damage = 20;
+    } 
+    else if (enemy instanceof Chicken) {
+        damage = 10;
+    } 
+    else if (enemy instanceof SmallChicken) {
+        damage = 5;
+    }
+
+    this.character.energy -= damage;
+
+    if (this.character.energy < 0) {
+        this.character.energy = 0;
+    }
+
+    this.character.lastHit = new Date().getTime();
+
+    this.statusBarHealth.setPercentage(this.character.energy);
     }
     }
     console.log("Character Y:", this.character.y);
