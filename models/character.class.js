@@ -3,8 +3,8 @@ class Character extends MovableObject {
   y = 30;
   speed = 10;
   idleTime = 0;
-  coins = 0;
-  bottles = 0;
+  coin = 0;
+  bottle = 0;
 
   offset = {
     top: 150,
@@ -114,6 +114,8 @@ class Character extends MovableObject {
 
   animate() {
     setInterval(() => {
+      if (!this.world.gameRunning) return;
+
       let isMoving = false;
 
       if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
@@ -129,7 +131,7 @@ class Character extends MovableObject {
       }
 
       if (isMoving && !this.isAboveGround()) {
-        if (this.walking_sound.paused) {
+        if (soundEnabled && this.walking_sound.paused) {
           this.walking_sound.play();
         }
       } else {
@@ -140,7 +142,7 @@ class Character extends MovableObject {
       if (this.world.keyboard.SPACE && !this.isAboveGround()) {
         this.jump();
 
-        if (this.jumping_sound.paused) {
+        if (soundEnabled && this.jumping_sound.paused) {
           this.jumping_sound.play();
         }
       }
@@ -149,15 +151,22 @@ class Character extends MovableObject {
     }, 1000 / 60);
 
     setInterval(() => {
+      if (!this.world.gameRunning) return;
+
       if (this.isDead()) {
         this.playAnimation(this.IMAGES_DEAD);
-        if (this.deads_sound.paused) {
+
+        this.sleeping_sound.pause();
+        this.sleeping_sound.currentTime = 0;
+
+        if (soundEnabled && this.deads_sound.paused) {
           this.deads_sound.play();
         }
       } else if (this.isHurt()) {
         this.playAnimation(this.IMAGES_HURT);
       } else if (this.isAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPIMG);
+
         if (!this.sleeping_sound.paused) {
           this.sleeping_sound.pause();
           this.sleeping_sound.currentTime = 0;
@@ -165,19 +174,21 @@ class Character extends MovableObject {
       } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
         //Walk Animation
         this.playAnimation(this.IMAGES_WALKING);
-        this.idleTime = 0; //сброс таймера
+        this.idleTime = 0; // timer auf 0 setzen wieder
 
         if (!this.sleeping_sound.paused) {
           this.sleeping_sound.pause();
           this.sleeping_sound.currentTime = 0;
         }
       } else {
-        this.idleTime += 120; // увеличиваем счетчик
+        this.idleTime += 120;
 
         if (this.idleTime > 3000) {
-          //3 sekunden ohne bewegung
+          //nach drei sekunden
+
           this.playAnimation(this.IMAGES_SLEEP);
-          if (this.sleeping_sound.paused) {
+
+          if (soundEnabled && this.sleeping_sound.paused) {
             this.sleeping_sound.play();
           }
         } else {
@@ -197,15 +208,18 @@ class Character extends MovableObject {
 
   collectCoin() {
     this.coin += 10;
-    this.coinCollect_sound.currentTime = 0;
-    this.coinCollect_sound.play();
+    if (soundEnabled) {
+      this.coinCollect_sound.currentTime = 0;
+      this.coinCollect_sound.play();
+    }
   }
-
   collectBottle() {
     if (this.bottle < 100) {
       this.bottle += 10;
-      this.bottleCollect_sound.currentTime = 0;
-      this.bottleCollect_sound.play();
+      if (soundEnabled) {
+        this.bottleCollect_sound.currentTime = 0;
+        this.bottleCollect_sound.play();
+      }
     }
   }
 }
