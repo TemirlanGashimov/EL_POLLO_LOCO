@@ -4,6 +4,7 @@
     <meta charset="UTF-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <link rel="stylesheet" href="style.css" />
+    <link rel="icon" type="image/png" href="img/favicon.png" />
     <link
       href="https://fonts.googleapis.com/css2?family=Luckiest+Guy&display=swap"
       rel="stylesheet"
@@ -41,12 +42,30 @@
 
   <body onload="init()">
     <div id="game-wrapper">
-      
-        <div id="start-screen">
-        <!-- <h1>El pollo loco</h1> -->
+      <div id="start-screen">
         <button id="start-btn">Start Game</button>
+        <button id="settings-btn" onclick="openSettings()">
+          EINSTELLUNGEN
+        </button>
+      </div>
+      <div id="settings-window">
+        <h2>Einstellungen</h2>
+
+        <h3>Steuerung</h3>
+        <p>➡ Pfeil rechts – laufen</p>
+        <p>⬅ Pfeil links – laufen</p>
+        <p>⬆ Pfeil oben – springen</p>
+        <p>D – Flasche werfen</p>
+        <p>F – Flasche kaufen</p>
+
+        <h3>Ziel des Spiels</h3>
+        <p>Sammle Coins und Flaschen.</p>
+        <p>Besiege die Hühner und den Endboss.</p>
+
+        <button onclick="closeSettings()">Zurück</button>
       </div>
 
+      <button id="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
       <canvas id="canvas" width="720" height="480"></canvas>
 
       <div id="game-over-screen">
@@ -58,7 +77,37 @@
         <img src="img/You won, you lost/You Win A.png" alt="You Win" />
         <button onclick="restartGame()">Restart</button>
       </div>
-      
+
+      <div id="pause-screen">
+        <div class="pause-panel">
+          <h2>PAUSED</h2>
+
+          <button onclick="resumeGame()">Resume</button>
+
+          <button onclick="toggleSound()" id="sound-btn">Sound: ON</button>
+          <button id="settings-btn" onclick="openSettings()">
+            EINSTELLUNGEN
+          </button>
+
+          <button onclick="restartGame()">Restart</button>
+        </div>
+      </div>
+
+      <div id="mobile-controls">
+        <div class="mobile-left">
+          <button id="btn-left">◀</button>
+          <button id="btn-right">▶</button>
+        </div>
+
+        <div class="mobile-right">
+          <button id="btn-jump">⬆</button>
+          <button id="btn-throw">D</button>
+        </div>
+      </div>
+
+      <div id="rotate-device">
+        <p>Turn your device to play</p>
+      </div>
     </div>
   </body>
 </html>
