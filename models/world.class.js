@@ -66,18 +66,41 @@ class World {
   checkCollisions() {
     this.level.enemies.forEach((enemy, index) => {
       if (this.character.isColliding(enemy) && !enemy.isDeadChicken) {
-        if (this.character.speedY < 0 && this.character.y < enemy.y) {
-          this.character.speedY = 20;
-          enemy.die();
 
-          setTimeout(() => {
+    let characterBottom = this.character.y + this.character.height;
+    let enemyTop = enemy.y;
+
+    // Spieler fällt von oben
+    if (this.character.speedY < 0 && characterBottom - 40 < enemyTop + 30) {
+
+        this.character.speedY = 20;
+        enemy.die();
+
+        setTimeout(() => {
             this.level.enemies.splice(index, 1);
-          }, 800);
-        } else {
-          this.character.hit();
-          this.statusBarHealth.setPercentage(this.character.energy);
-        }
-      }
+        }, 500);
+
+    } else {
+
+        if (!this.character.isHurt()){
+
+          if(enemy instanceof Endboss){
+            this.character.energy -= 20;
+          }else {
+            this.character.energy -= 5;
+          }
+          if (this.character.energy <0) {
+            this.character.energy = 0;
+          }
+        this.character.lastHit = new Date().getTime();
+        this.statusBarHealth.setPercentage(this.character.energy);
+    }
+    }
+    console.log("Character Y:", this.character.y);
+    console.log("Character Bottom:", this.character.y + this.character.height);
+    console.log("Enemy Y:", enemy.y);
+    console.log("Character speedY:", this.character.speedY);
+}
     });
 
     this.level.coins.forEach((coin, index) => {
@@ -140,8 +163,9 @@ class World {
       this.bossFightStarted = true;
 
       this.boss.endbossApproach_sound.currentTime = 0;
+      if(soundEnabled) {
       this.boss.endbossApproach_sound.play().catch(() => {});
-    }
+    }}
   }
 
   checkBottleBossCollision() {
