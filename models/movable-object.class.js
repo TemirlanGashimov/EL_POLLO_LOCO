@@ -42,8 +42,10 @@ class MovableObject extends DrawableObject {
       this.energy = 0;
     } else {
       this.lastHit = new Date().getTime();
+      if (soundEnabled && this.hurts_sound) {
+      this.hurts_sound.currentTime = 0;
       this.hurts_sound.play();
-    }
+    }}
   }
 
   collectCoin() {
