@@ -1,6 +1,6 @@
 class Chicken extends MovableObject {
-  y = 370; // platzierung auf y Achse // sobald die höche sich änder muss man auch die y Achse ändern damit die auf eine ebene sind +-
-  height = 50; // höche von unsere chicken wie hoch/groß die sind
+  y = 355; // platzierung auf y Achse // sobald die höche sich änder muss man auch die y Achse ändern damit die auf eine ebene sind +-
+  height = 70; // höche von unsere chicken wie hoch/groß die sind
   width = 85; //Breite von unseren chicken
   isDeadChicken = false;
 
@@ -21,7 +21,7 @@ class Chicken extends MovableObject {
     "img/3_enemies_chicken/chicken_normal/2_dead/dead.png"
   ];
 
-  chickenDead_sound = new Audio ("sounds/chicken/chickenDead.mp3")
+  chickenDead_sound = new Audio ("sounds/chicken/chickenDead.mp3");
 
   constructor() {
     super().loadImage("img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
