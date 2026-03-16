@@ -44,29 +44,39 @@
   <body onload="init()">
     <div id="game-wrapper">
       <div id="start-screen">
-        <button id="start-btn">Start Game</button>
-        <button id="settings-btn" onclick="openSettings()">
-          EINSTELLUNGEN
-        </button>
+        <button class="start-settings-btn" id="start-btn">Start Game</button>
+        <button class="start-settings-btn" id="settings-btn" onclick="openSettings()">EINSTELLUNGEN</button>
       </div>
+
       <div id="settings-window">
-        <h2>Einstellungen</h2>
 
-        <h3>Steuerung</h3>
-        <p>➡ Pfeil rechts – laufen</p>
-        <p>⬅ Pfeil links – laufen</p>
-        <p> SPACE – springen</p>
-        <p>D – Flasche werfen</p>
-        <p>F – Flasche kaufen</p>
+  <div class="settings-content">
 
-        <h3>Ziel des Spiels</h3>
-        <p>Sammle Coins und Flaschen.</p>
-        <p>Besiege die Hühner und den Endboss.</p>
+    <div class="settings-left">
+      <h3>Steuerung</h3>
+      <p>➡ Pfeil rechts – laufen</p>
+      <p>⬅ Pfeil links – laufen</p>
+      <p>SPACE – springen</p>
+      <p>D – Flasche werfen</p>
+      <p>F – Flasche kaufen</p>
+    </div>
 
-        <button onclick="closeSettings()">Zurück</button>
-      </div>
+    <div class="settings-right">
+      <h3>Ziel des Spiels</h3>
+      <p>Sammle Coins und Flaschen.</p>
+      <p>Besiege die Hühner.</p>
+      <p>Besiege den Endboss.</p>
+    </div>
 
+  </div>
+
+  <button onclick="closeSettings()">Zurück</button>
+
+</div>
+
+      <button id="pause-btn" onclick="togglePause()">⏸</button>
       <button id="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
+      <button id="sound-toggle-btn" onclick="toggleSound()">🔊</button>
       <canvas id="canvas" width="720" height="480"></canvas>
 
       <div id="game-over-screen">
@@ -86,9 +96,7 @@
           <button onclick="resumeGame()">Resume</button>
 
           <button onclick="toggleSound()" id="sound-btn">Sound: ON</button>
-          <button id="settings-btn" onclick="openSettings()">
-            EINSTELLUNGEN
-          </button>
+          <button onclick="openSettings()">EINSTELLUNGEN</button>
 
           <button onclick="restartGame()">Restart</button>
         </div>
@@ -103,6 +111,7 @@
         <div class="mobile-right">
           <button id="btn-jump">⬆</button>
           <button id="btn-throw">D</button>
+          <button id="btn-buy">🧴</button>
         </div>
       </div>
 
