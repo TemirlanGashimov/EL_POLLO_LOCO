@@ -8,7 +8,6 @@ let soundEnabled = true;
 
 function init() {
   canvas = document.getElementById("canvas");
-
   document.getElementById("start-btn").addEventListener("click", startGame);
 
   let savedSound = localStorage.getItem("sound");
@@ -17,16 +16,20 @@ function init() {
     soundEnabled = savedSound === "true";
   }
 
-  let btn = document.getElementById("sound-btn");
+  let pauseBtn = document.getElementById("sound-btn");
+  let mobileBtn = document.getElementById("sound-toggle-btn");
 
-  if (btn) {
-    btn.innerText = soundEnabled ? "Sound: ON" : "Sound: OFF";
+  if (pauseBtn) {
+    pauseBtn.innerText = soundEnabled ? "Sound: ON" : "Sound: OFF";
+  }
+
+  if (mobileBtn) {
+    mobileBtn.innerText = soundEnabled ? "🔊" : "🔇";
   }
 }
 
 function toggleFullscreen() {
   let game = document.getElementById("game-wrapper");
-
   if (!document.fullscreenElement) {
     game.requestFullscreen();
   } else {
@@ -58,7 +61,6 @@ function restartGame() {
   document.getElementById("victory-screen").style.display = "none";
   document.getElementById("game-over-screen").style.display = "none";
   document.getElementById("pause-screen").style.display = "none";
-
   document.getElementById("canvas").style.display = "block";
 
   paused = false;
@@ -67,14 +69,40 @@ function restartGame() {
   world.gameRunning = true;
 }
 
-function openSettings() {
+function resumeGame() {
   document.getElementById("pause-screen").style.display = "none";
+
+  world.gameRunning = true;
+  world.draw();
+
+  paused = false;
+}
+
+function togglePause() {
+  if (!paused) {
+    document.getElementById("pause-screen").style.display = "flex";
+
+    world.gameRunning = false;
+
+    if (world && world.character) {
+      world.character.walking_sound.pause();
+      world.character.sleeping_sound.pause();
+      world.character.jumping_sound.pause();
+      world.character.hurts_sound.pause();
+    }
+
+    paused = true;
+  } else {
+    resumeGame();
+  }
+}
+
+function openSettings() {
   document.getElementById("settings-window").style.display = "flex";
 }
 
 function closeSettings() {
   document.getElementById("settings-window").style.display = "none";
-  document.getElementById("pause-screen").style.display = "flex";
 }
 
 window.addEventListener("keydown", (e) => {
@@ -107,12 +135,6 @@ window.addEventListener("keydown", (e) => {
   }
 });
 
-window.addEventListener("keydown", function (e) {
-  if (e.key === "Escape" && world) {
-    togglePause();
-  }
-});
-
 window.addEventListener("keyup", (e) => {
   if (e.keyCode == 39) {
     keyboard.RIGHT = false;
@@ -141,78 +163,20 @@ window.addEventListener("keyup", (e) => {
   }
 });
 
-function togglePause() {
-  if (!paused) {
+window.addEventListener("keydown", function (e) {
+  if (e.key === "Escape") {
+    let settings = document.getElementById("settings-window");
 
-    document.getElementById("pause-screen").style.display = "flex";
-
-    world.gameRunning = false;
-
-    if(world && world.character){
-      world.character.walking_sound.pause();
-      world.character.sleeping_sound.pause();
-      world.character.jumping_sound.pause();
-      world.character.hurts_sound.pause();
+    if (settings.style.display === "flex") {
+      closeSettings();
+      return;
     }
 
-    paused = true;
-
-  } else {
-    resumeGame();
+    if (world) {
+      togglePause();
+    }
   }
-}
-
-function stopAllSounds(){
-
-  if(world && world.character){
-
-    let sounds = [
-      world.character.walking_sound,
-      world.character.sleeping_sound,
-      world.character.jumping_sound,
-      world.character.hurts_sound,
-      world.character.deads_sound,
-      world.character.coinCollect_sound,
-      world.character.bottleCollect_sound
-    ];
-
-    sounds.forEach(sound => {
-      sound.pause();
-      sound.currentTime = 0;
-    });
-
-  }
-
-}
-
-function resumeGame() {
-  document.getElementById("pause-screen").style.display = "none";
-
-  world.gameRunning = true;
-  world.draw();
-
-  paused = false;
-}
-
-function toggleSound() {
-  soundEnabled = !soundEnabled;
-
-  localStorage.setItem("sound", soundEnabled);
-
-  let btn = document.getElementById("sound-btn");
-
-  if (soundEnabled) {
-    btn.innerText = "Sound: ON";
-  } else {
-    btn.innerText = "Sound: OFF";
-  }
-}
-
-function setGameVolume(value) {
-  document.querySelectorAll("audio").forEach((sound) => {
-    sound.volume = value * 0.05;
-  });
-}
+});
 
 function setupMobileControls() {
   document.getElementById("btn-left").addEventListener("touchstart", () => {
@@ -245,5 +209,60 @@ function setupMobileControls() {
 
   document.getElementById("btn-throw").addEventListener("touchend", () => {
     keyboard.D = false;
+  });
+
+  document.getElementById("btn-buy").addEventListener("touchstart", () => {
+    keyboard.F = true;
+  });
+
+  document.getElementById("btn-buy").addEventListener("touchend", () => {
+    keyboard.F = false;
+  });
+}
+
+function stopAllSounds() {
+  if (world && world.character) {
+    let sounds = [
+      world.character.walking_sound,
+      world.character.sleeping_sound,
+      world.character.jumping_sound,
+      world.character.hurts_sound,
+      world.character.deads_sound,
+      world.character.coinCollect_sound,
+      world.character.bottleCollect_sound,
+    ];
+
+    sounds.forEach((sound) => {
+      sound.pause();
+      sound.currentTime = 0;
+    });
+  }
+}
+
+function toggleSound() {
+  soundEnabled = !soundEnabled;
+
+  localStorage.setItem("sound", soundEnabled);
+
+  let pauseBtn = document.getElementById("sound-btn");
+  let mobileBtn = document.getElementById("sound-toggle-btn");
+
+  if (soundEnabled) {
+
+    if (pauseBtn) pauseBtn.innerText = "Sound: ON";
+    if (mobileBtn) mobileBtn.innerText = "🔊";
+
+  } else {
+
+    if (pauseBtn) pauseBtn.innerText = "Sound: OFF";
+    if (mobileBtn) mobileBtn.innerText = "🔇";
+
+    stopAllSounds();
+  }
+}
+
+function setGameVolume(value) {
+  document.querySelectorAll("audio").forEach((sound) => {
+    sound.volume = value * 0.05;
   });
 }
