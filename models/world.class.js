@@ -66,52 +66,48 @@ class World {
   checkCollisions() {
     this.level.enemies.forEach((enemy, index) => {
       if (this.character.isColliding(enemy) && !enemy.isDeadChicken) {
+        let characterBottom = this.character.y + this.character.height;
+        let enemyTop = enemy.y;
 
-    let characterBottom = this.character.y + this.character.height;
-    let enemyTop = enemy.y;
+        // Spieler fällt von oben
+        if (this.character.speedY < 0 && characterBottom - 40 < enemyTop + 30) {
+          this.character.speedY = 20;
+          enemy.die();
 
-    // Spieler fällt von oben
-    if (this.character.speedY < 0 && characterBottom - 40 < enemyTop + 30) {
-
-        this.character.speedY = 20;
-        enemy.die();
-
-        setTimeout(() => {
+          setTimeout(() => {
             this.level.enemies.splice(index, 1);
-        }, 500);
+          }, 500);
+        } else {
+          if (!this.character.isHurt()) {
+            let damage = 0;
 
-    } else {
+            if (enemy instanceof Endboss) {
+              damage = 20;
+            } else if (enemy instanceof Chicken) {
+              damage = 10;
+            } else if (enemy instanceof SmallChicken) {
+              damage = 5;
+            }
 
-        if (!this.character.isHurt()) {
+            this.character.energy -= damage;
 
-    let damage = 0;
+            if (this.character.energy < 0) {
+              this.character.energy = 0;
+            }
 
-    if (enemy instanceof Endboss) {
-        damage = 20;
-    } 
-    else if (enemy instanceof Chicken) {
-        damage = 10;
-    } 
-    else if (enemy instanceof SmallChicken) {
-        damage = 5;
-    }
+            this.character.lastHit = new Date().getTime();
 
-    this.character.energy -= damage;
-
-    if (this.character.energy < 0) {
-        this.character.energy = 0;
-    }
-
-    this.character.lastHit = new Date().getTime();
-
-    this.statusBarHealth.setPercentage(this.character.energy);
-    }
-    }
-    console.log("Character Y:", this.character.y);
-    console.log("Character Bottom:", this.character.y + this.character.height);
-    console.log("Enemy Y:", enemy.y);
-    console.log("Character speedY:", this.character.speedY);
-}
+            this.statusBarHealth.setPercentage(this.character.energy);
+          }
+        }
+        console.log("Character Y:", this.character.y);
+        console.log(
+          "Character Bottom:",
+          this.character.y + this.character.height,
+        );
+        console.log("Enemy Y:", enemy.y);
+        console.log("Character speedY:", this.character.speedY);
+      }
     });
 
     this.level.coins.forEach((coin, index) => {
@@ -174,9 +170,10 @@ class World {
       this.bossFightStarted = true;
 
       this.boss.endbossApproach_sound.currentTime = 0;
-      if(soundEnabled) {
-      this.boss.endbossApproach_sound.play().catch(() => {});
-    }}
+      if (soundEnabled) {
+        this.boss.endbossApproach_sound.play().catch(() => {});
+      }
+    }
   }
 
   checkBottleBossCollision() {
@@ -193,18 +190,19 @@ class World {
   }
 
   checkBossDead() {
-  if (!this.boss) return;
+    if (!this.boss) return;
 
-  if (this.boss.isDead && this.gameRunning) {
+    if (this.boss.isDead && this.gameRunning) {
+      setTimeout(() => {
+        this.gameRunning = false;
+        clearInterval(this.intervalId);
 
-    setTimeout(() => {
-      this.gameRunning = false;
-      clearInterval(this.intervalId);
-      document.getElementById("victory-screen").style.display = "flex";
-    }, 1500);
+        stopAllSounds();
 
+        document.getElementById("victory-screen").style.display = "flex";
+      }, 1500);
+    }
   }
-}
 
   // Draw() wird immer wieder aufgerufen
   draw() {
@@ -222,7 +220,7 @@ class World {
 
     this.ctx.translate(this.camera_x, 0); // dadurch bewegt sich die kamera nach rechts
     this.addObjectsToMap(this.level.backgroundObjects); // das hintergrund soll als erste dargestellt werden damit die objecte auf der hintergrund zu sehen/befinden sind
-
+    this.addObjectsToMap(this.level.clouds);
     this.ctx.translate(-this.camera_x, 0);
     // ------ Space for fixed objects ------
     this.addToMap(this.statusBarHealth);
@@ -244,7 +242,6 @@ class World {
     this.ctx.translate(this.camera_x, 0); // Forwards
 
     this.addToMap(this.character); //unsere caracter
-    this.addObjectsToMap(this.level.clouds); // unsere wolken
     this.addObjectsToMap(this.level.enemies); // unsere genger, Chicken
     this.addObjectsToMap(this.level.coins); // unsere coins
     this.addObjectsToMap(this.level.bottles); // unsere flaschen
