@@ -20,7 +20,7 @@ function init() {
   let mobileBtn = document.getElementById("sound-toggle-btn");
 
   if (pauseBtn) {
-    pauseBtn.innerText = soundEnabled ? "Sound: ON" : "Sound: OFF";
+    pauseBtn.innerText = soundEnabled ? "Sound: AN" : "Sound: AUS";
   }
 
   if (mobileBtn) {
@@ -37,14 +37,41 @@ function toggleFullscreen() {
   }
 }
 
+function isTouchDevice() {
+  return (
+    window.matchMedia("(pointer: coarse)").matches ||
+    navigator.maxTouchPoints > 0
+  );
+}
+
+function showMobileControls() {
+  const controls = document.getElementById("mobile-controls");
+
+  if (!controls) return;
+
+  controls.style.display = isTouchDevice() ? "flex" : "none";
+}
+
 function startGame() {
   document.getElementById("start-screen").style.display = "none";
   document.getElementById("canvas").style.display = "block";
+
+  document.getElementById("pause-btn").style.display = "block";
+  document.getElementById("fullscreen-btn").style.display = "block";
+  document.getElementById("sound-toggle-btn").style.display = "block";
 
   canvas = document.getElementById("canvas");
   world = new World(canvas, keyboard);
 
   setupMobileControls();
+  showMobileControls();
+
+  if (soundEnabled) {
+    let startSound = new Audio("sounds/game/gameStart.mp3");
+    startSound.volume = 0.3;
+    startSound.currentTime = 0;
+    startSound.play();
+  }
 }
 
 function showGameOver() {
@@ -95,6 +122,18 @@ function togglePause() {
   } else {
     resumeGame();
   }
+}
+
+function openImpressum() {
+  document.getElementById("impressum-window").style.display = "flex";
+
+  if (world) {
+    world.gameRunning = false; // 🔥 pausiert Spiel automatisch
+  }
+}
+
+function closeImpressum() {
+  document.getElementById("impressum-window").style.display = "none";
 }
 
 function openSettings() {
@@ -178,6 +217,7 @@ window.addEventListener("keydown", function (e) {
   }
 });
 
+
 function setupMobileControls() {
   document.getElementById("btn-left").addEventListener("touchstart", () => {
     keyboard.LEFT = true;
@@ -248,13 +288,10 @@ function toggleSound() {
   let mobileBtn = document.getElementById("sound-toggle-btn");
 
   if (soundEnabled) {
-
-    if (pauseBtn) pauseBtn.innerText = "Sound: ON";
+    if (pauseBtn) pauseBtn.innerText = "Sound: AN";
     if (mobileBtn) mobileBtn.innerText = "🔊";
-
   } else {
-
-    if (pauseBtn) pauseBtn.innerText = "Sound: OFF";
+    if (pauseBtn) pauseBtn.innerText = "Sound: AUS";
     if (mobileBtn) mobileBtn.innerText = "🔇";
 
     stopAllSounds();
