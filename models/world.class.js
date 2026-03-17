@@ -23,7 +23,6 @@ class World {
     this.boss = this.level.enemies.find((e) => e instanceof Endboss);
     this.setWorld();
     this.draw();
-    this.run();
   }
 
   setWorld() {
@@ -31,22 +30,6 @@ class World {
     this.level.enemies.forEach((enemy) => {
       enemy.world = this;
     });
-  }
-
-  run() {
-    this.intervalId = setInterval(() => {
-      if (!this.gameRunning) return;
-      //   this.checkCollisions();
-      this.checkThrowObjects();
-      this.checkBottleBossCollision();
-      this.checkBottleEnemyCollision();
-      this.checkBossTrigger();
-      this.checkBossDead();
-
-      this.throwableObjects = this.throwableObjects.filter(
-        (bottle) => !bottle.markedForDeletion,
-      );
-    }, 200);
   }
 
   checkThrowObjects() {
@@ -100,13 +83,6 @@ class World {
             this.statusBarHealth.setPercentage(this.character.energy);
           }
         }
-        console.log("Character Y:", this.character.y);
-        console.log(
-          "Character Bottom:",
-          this.character.y + this.character.height,
-        );
-        console.log("Enemy Y:", enemy.y);
-        console.log("Character speedY:", this.character.speedY);
       }
     });
 
@@ -195,8 +171,6 @@ class World {
     if (this.boss.isDead && this.gameRunning) {
       setTimeout(() => {
         this.gameRunning = false;
-        clearInterval(this.intervalId);
-
         stopAllSounds();
 
         document.getElementById("victory-screen").style.display = "flex";
@@ -207,16 +181,21 @@ class World {
   // Draw() wird immer wieder aufgerufen
   draw() {
     if (!this.gameRunning) return;
+    this.checkThrowObjects();
+    this.checkBottleBossCollision();
+    this.checkBottleEnemyCollision();
+    this.checkBossTrigger();
+    this.checkBossDead();
+
+    this.checkCollisions();
+
+    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height);
 
     if (this.character.isDead()) {
       this.gameRunning = false;
-      clearInterval(this.intervalId);
       document.getElementById("game-over-screen").style.display = "flex";
       return;
     }
-
-    this.checkCollisions();
-    this.ctx.clearRect(0, 0, this.canvas.width, this.canvas.height); // canvas wird gelöscht
 
     this.ctx.translate(this.camera_x, 0); // dadurch bewegt sich die kamera nach rechts
     this.addObjectsToMap(this.level.backgroundObjects); // das hintergrund soll als erste dargestellt werden damit die objecte auf der hintergrund zu sehen/befinden sind
