@@ -71,40 +71,44 @@ class Endboss extends MovableObject {
   }
 
   animate() {
-    setInterval(() => {
-      if (this.isDead) {
-        this.playAnimation(this.IMAGES_DEAD);
-      } else if (this.isHurt) {
-        this.playAnimation(this.IMAGES_HURT);
-      } else if (this.isAttacking) {
-        this.playAnimation(this.IMAGES_ATTACK);
-      } else if (this.isPlayerNear()) {
-        this.playAnimation(this.IMAGES_WALK);
-      } else {
-        this.playAnimation(this.IMAGES_WALKING);
-      }
-    }, 200);
+  setInterval(() => {
+    if (!this.world || !this.world.gameRunning) return;
 
-    setInterval(() => {
-      if (
-        this.isPlayerVeryNear() &&
-        !this.isDead &&
-        !this.isAttacking &&
-        !this.isHurt
-      ) {
-        this.attack();
-      }
+    if (this.isDead) {
+      this.playAnimation(this.IMAGES_DEAD);
+    } else if (this.isHurt) {
+      this.playAnimation(this.IMAGES_HURT);
+    } else if (this.isAttacking) {
+      this.playAnimation(this.IMAGES_ATTACK);
+    } else if (this.isPlayerNear()) {
+      this.playAnimation(this.IMAGES_WALK);
+    } else {
+      this.playAnimation(this.IMAGES_WALKING);
+    }
+  }, 200);
 
-      if (
-        this.isPlayerNear() &&
-        !this.isDead &&
-        !this.isAttacking &&
-        !this.isHurt
-      ) {
-        this.x -= 1;
-      }
-    }, 1000 / 60);
-  }
+  setInterval(() => {
+    if (!this.world || !this.world.gameRunning) return;
+
+    if (
+      this.isPlayerVeryNear() &&
+      !this.isDead &&
+      !this.isAttacking &&
+      !this.isHurt
+    ) {
+      this.attack();
+    }
+
+    if (
+      this.isPlayerNear() &&
+      !this.isDead &&
+      !this.isAttacking &&
+      !this.isHurt
+    ) {
+      this.x -= 1;
+    }
+  }, 1000 / 60);
+}
 
   hit() {
     let now = new Date().getTime();

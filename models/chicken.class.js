@@ -47,12 +47,17 @@ class Chicken extends MovableObject {
 
   animate() {
     setInterval(() => {
+      if (!this.world || !this.world.gameRunning) return;
+
       if(!this.isDeadChicken){
         this.moveLeft();
       }
     }, 1000 / 60); // 60 mal pro sekunde
 
     setInterval(() => {
+
+      if (!this.world || this.world.gameRunning) return;
+
   if (this.isDeadChicken) {
     this.playAnimation(this.IMAGES_DEAD);
   } else {
