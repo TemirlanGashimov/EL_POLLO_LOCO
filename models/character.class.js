@@ -6,6 +6,10 @@ class Character extends MovableObject {
   coin = 0;
   bottle = 0;
 
+  lastHitSound = 0;
+  deadSoundPlayed = false;
+  lastActionTime = 0;
+
   offset = {
     top: 150,
     left: 20,
@@ -81,7 +85,7 @@ class Character extends MovableObject {
   sleeping_sound = new Audio("sounds/character/characterSnoring.mp3");
   jumping_sound = new Audio("sounds/character/characterJump.wav");
   hurts_sound = new Audio("sounds/character/characterDamage.mp3");
-  deads_sound = new Audio("/sounds/character/characterDead.wav");
+  deads_sound = new Audio("sounds/character/characterDead.wav");
   coinCollect_sound = new Audio("sounds/collectibles/collectSound.wav");
   bottleCollect_sound = new Audio("sounds/collectibles/bottleCollectSound.wav");
 
@@ -91,22 +95,22 @@ class Character extends MovableObject {
     this.loadImages(this.IMAGES_IDLE);
 
     this.loadImages(this.IMAGES_SLEEP);
-    this.sleeping_sound.volume = 0.05;
+    this.sleeping_sound.volume = 0.03;
     this.sleeping_sound.loop = true;
 
     this.loadImages(this.IMAGES_WALKING);
-    this.walking_sound.volume = 0.05;
+    this.walking_sound.volume = 0.03;
     this.walking_sound.loop = true;
 
     this.loadImages(this.IMAGES_JUMPIMG);
-    this.jumping_sound.volume = 0.05;
+    this.jumping_sound.volume = 0.03;
 
     this.loadImages(this.IMAGES_DEAD);
-    this.deads_sound.volume = 0.05;
+    this.deads_sound.volume = 0.03;
     this.deads_sound.loop = false;
 
     this.loadImages(this.IMAGES_HURT);
-    this.hurts_sound.volume = 0.05;
+    this.hurts_sound.volume = 0.03;
 
     this.applyGravity();
     this.animate();
@@ -141,8 +145,10 @@ class Character extends MovableObject {
 
       if (this.world.keyboard.SPACE && !this.isAboveGround()) {
         this.jump();
+        this.lastActionTime = Date.now();
 
         if (soundEnabled && this.jumping_sound.paused) {
+          this.jumping_sound.currentTime = 0;
           this.jumping_sound.play();
         }
       }
@@ -157,21 +163,48 @@ class Character extends MovableObject {
         this.playAnimation(this.IMAGES_DEAD);
 
         this.sleeping_sound.pause();
+        this.walking_sound.pause();
+
+        this.sleeping_sound.currentTime = 0;
+        this.walking_sound.currentTime = 0;
+
+        if (soundEnabled && !this.deadSoundPlayed) {
+          this.deads_sound.volume = 0.3;
+          this.deads_sound.currentTime = 0;
+          this.deads_sound.play();
+
+          this.deadSoundPlayed = true;
+        }
+      } else if (this.isHurt() && !this.isDead()) {
+        this.playAnimation(this.IMAGES_HURT);
+
+        // 🔥 STOP SLEEP SOUND SOFORT
+        this.sleeping_sound.pause();
         this.sleeping_sound.currentTime = 0;
 
-        if (soundEnabled && this.deads_sound.paused) {
-          this.deads_sound.play();
+        let now = Date.now();
+
+        if (soundEnabled && now - this.lastHitSound > 500) {
+          this.hurts_sound.currentTime = 0;
+          this.hurts_sound.play();
+          this.lastHitSound = now;
         }
-      } else if (this.isHurt()) {
-        this.playAnimation(this.IMAGES_HURT);
       } else if (this.isAboveGround()) {
         this.playAnimation(this.IMAGES_JUMPIMG);
+
+        this.idleTime = 0; // 🔥 FIX
 
         if (!this.sleeping_sound.paused) {
           this.sleeping_sound.pause();
           this.sleeping_sound.currentTime = 0;
         }
-      } else if (this.world.keyboard.RIGHT || this.world.keyboard.LEFT) {
+      } else if (
+        this.world.keyboard.RIGHT ||
+        this.world.keyboard.LEFT ||
+        this.world.keyboard.D ||
+        this.world.keyboard.SPACE ||
+        this.world.keyboard.F
+      ) {
         //Walk Animation
         this.playAnimation(this.IMAGES_WALKING);
         this.idleTime = 0; // timer auf 0 setzen wieder
@@ -181,45 +214,81 @@ class Character extends MovableObject {
           this.sleeping_sound.currentTime = 0;
         }
       } else {
-        this.idleTime += 120;
+        let now = Date.now();
 
-        if (this.idleTime > 3000) {
-          //nach drei sekunden
-
-          this.playAnimation(this.IMAGES_SLEEP);
-
-          if (soundEnabled && this.sleeping_sound.paused) {
-            this.sleeping_sound.play();
-          }
-        } else {
+        if (now - this.lastActionTime < 4000) {
+          this.idleTime = 0;
           this.playAnimation(this.IMAGES_IDLE);
+
           if (!this.sleeping_sound.paused) {
             this.sleeping_sound.pause();
             this.sleeping_sound.currentTime = 0;
           }
+          return;
+        }
+          this.idleTime += 120;
+
+          if (this.idleTime > 3000) {
+            this.playAnimation(this.IMAGES_SLEEP);
+
+            if (soundEnabled && this.sleeping_sound.paused) {
+              this.sleeping_sound.play();
+            }
+          } else {
+            this.playAnimation(this.IMAGES_IDLE);
+
+            if (!this.sleeping_sound.paused) {
+              this.sleeping_sound.pause();
+              this.sleeping_sound.currentTime = 0;
+            }
         }
       }
     }, 120);
   }
 
   jump() {
-    this.speedY = 30;
+    this.speedY = 20;
   }
 
   collectCoin() {
-    this.coin += 10;
+  this.coin += 10;
+
+  if (soundEnabled) {
+    this.coinCollect_sound.volume = 0.3; // 🔊 Lautstärke
+    this.coinCollect_sound.currentTime = 0;
+    this.coinCollect_sound.play();
+  }
+}
+
+collectBottle() {
+  if (this.bottle < 100) {
+    this.bottle += 10;
+
     if (soundEnabled) {
-      this.coinCollect_sound.currentTime = 0;
-      this.coinCollect_sound.play();
+      this.bottleCollect_sound.volume = 0.3; // 🔊 Lautstärke
+      this.bottleCollect_sound.currentTime = 0;
+      this.bottleCollect_sound.play();
     }
   }
-  collectBottle() {
-    if (this.bottle < 100) {
-      this.bottle += 10;
+}
+
+  hit() {
+    super.hit();
+
+    this.idleTime = 0;
+    this.lastActionTime = Date.now(); // 🔥 NEU
+
+    this.sleeping_sound.pause();
+    this.sleeping_sound.currentTime = 0;
+
+    let now = Date.now();
+
+    if (now - this.lastHitSound > 500) {
       if (soundEnabled) {
-        this.bottleCollect_sound.currentTime = 0;
-        this.bottleCollect_sound.play();
+        this.hurts_sound.currentTime = 0;
+        this.hurts_sound.play();
       }
+      this.lastHitSound = now;
     }
   }
 }
