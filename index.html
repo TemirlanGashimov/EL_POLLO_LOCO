@@ -44,35 +44,61 @@
   <body onload="init()">
     <div id="game-wrapper">
       <div id="start-screen">
-        <button class="start-settings-btn" id="start-btn">Start Game</button>
-        <button class="start-settings-btn" id="settings-btn" onclick="openSettings()">EINSTELLUNGEN</button>
+        <div class="menu-box">
+          <button class="start-settings-btn" id="start-btn">
+            Spiel starten
+          </button>
+          <button
+            class="start-settings-btn"
+            id="settings-btn"
+            onclick="openSettings()"
+          >
+            Einstellungen
+          </button>
+          <button class="start-settings-btn" onclick="openImpressum()">
+            Impressum
+          </button>
+        </div>
       </div>
 
       <div id="settings-window">
+        <div class="settings-content">
+          <div class="settings-left">
+            <h3>Steuerung</h3>
+            <p>➡ Pfeil rechts – laufen</p>
+            <p>⬅ Pfeil links – laufen</p>
+            <p>SPACE – springen</p>
+            <p>D – Flasche werfen</p>
+            <p>F – Flasche kaufen</p>
+          </div>
 
-  <div class="settings-content">
+          <div class="settings-right">
+            <h3>Ziel des Spiels</h3>
+            <p>Sammle Coins und Flaschen.</p>
+            <p>Besiege die Hühner.</p>
+            <p>Besiege den Endboss.</p>
+          </div>
+        </div>
+        <button onclick="closeSettings()">Zurück</button>
+      </div>
 
-    <div class="settings-left">
-      <h3>Steuerung</h3>
-      <p>➡ Pfeil rechts – laufen</p>
-      <p>⬅ Pfeil links – laufen</p>
-      <p>SPACE – springen</p>
-      <p>D – Flasche werfen</p>
-      <p>F – Flasche kaufen</p>
-    </div>
+      <div id="impressum-window">
+        <div class="impressum-content">
+          <h2>Impressum</h2>
 
-    <div class="settings-right">
-      <h3>Ziel des Spiels</h3>
-      <p>Sammle Coins und Flaschen.</p>
-      <p>Besiege die Hühner.</p>
-      <p>Besiege den Endboss.</p>
-    </div>
+          <p>Angaben gemäß § 5 DDG</p>
 
-  </div>
+          <p>
+            Temirlan Gashimov<br />
+            Augustastraße 16<br />
+            58089 Hagen
+          </p>
 
-  <button onclick="closeSettings()">Zurück</button>
+          <p>E-Mail: gashimov.temerlan@gmail.com</p>
 
-</div>
+          <button onclick="closeImpressum()">Zurück</button>
+        </div>
+      </div>
 
       <button id="pause-btn" onclick="togglePause()">⏸</button>
       <button id="fullscreen-btn" onclick="toggleFullscreen()">⛶</button>
@@ -81,24 +107,23 @@
 
       <div id="game-over-screen">
         <img src="./img/You won, you lost/Game Over.png" alt="Game Over" />
-        <button onclick="restartGame()">Restart</button>
+        <button onclick="restartGame()">Neustart</button>
       </div>
 
       <div id="victory-screen" class="end-screen">
         <img src="img/You won, you lost/You Win A.png" alt="You Win" />
-        <button onclick="restartGame()">Restart</button>
+        <button onclick="restartGame()">Neustart</button>
       </div>
 
       <div id="pause-screen">
         <div class="pause-panel">
-          <h2>PAUSED</h2>
+          <h2>Pausiert</h2>
 
-          <button onclick="resumeGame()">Resume</button>
-
-          <button onclick="toggleSound()" id="sound-btn">Sound: ON</button>
-          <button onclick="openSettings()">EINSTELLUNGEN</button>
-
-          <button onclick="restartGame()">Restart</button>
+          <button onclick="resumeGame()">Fortsetzen</button>
+          <button onclick="toggleSound()" id="sound-btn">Sound: AN</button>
+          <button onclick="openSettings()">Einstellungen</button>
+          <button onclick="restartGame()">Neustart</button>
+          <button onclick="openImpressum()">Impressum</button>
         </div>
       </div>
 
@@ -116,7 +141,11 @@
       </div>
 
       <div id="rotate-device">
-        <p>Turn your device to play</p>
+        <div class="rotate-box">
+          <div class="phone">
+            <p>Bitte Gerät drehen</p>
+          </div>
+        </div>
       </div>
     </div>
   </body>
