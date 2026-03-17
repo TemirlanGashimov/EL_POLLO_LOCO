@@ -5,62 +5,84 @@ body {
   display: flex;
   justify-content: center;
   align-items: center;
-
   background-image: url("./img/background_el_pollo_loco/El_Pollo_Loco_Canvas_BckGround img.png");
   background-size: cover;
   background-position: center;
   background-repeat: no-repeat;
 }
 
+/* Canvas */
+canvas {
+  background-color: black;
+  border-radius: 20px;
+  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
+  width: 100%;
+  height: auto;
+  max-height: 100vh;
+  max-width: 100vw;
+  display: none;
+}
+
 /* Wrapper hält Canvas + Screens */
 #game-wrapper {
   position: relative;
-
   width: 720px;
   height: 480px;
-
   max-width: 100vw;
   max-height: 100vh;
+}
+
+#pause-btn,
+#fullscreen-btn,
+#sound-toggle-btn{
+  display: none;
+}
+
+.menu-box {
+  position: absolute;
+  top: 50%;
+  left: 50%;
+  transform: translate(-50%, -50%);
+  display: flex;
+  flex-direction: column;
+  padding: 30px 50px;
+  border-radius: 15px;
+  box-shadow: 0 0 2px rgba(0, 0, 0, 0.8);
+}
+
+.menu-box button {
+  font-size: 22px;
+  font-family: "Bungee", cursive;
+  padding: 12px 30px;
+  border: none;
+  border-radius: 10px;
+  color: black;
+  cursor: pointer;
+  transition: all 0.2s;
+}
+
+.menu-box button:hover {
+  transform: scale(1.1);
+  background: #ffd633;
 }
 
 #fullscreen-btn {
   position: absolute;
   top: 0;
   right: 10px;
-
   width: 40px;
   height: 40px;
-
   border: none;
   border-radius: 8px;
-
   background: rgba(0, 0, 0, 0.6);
   color: white;
   font-size: 20px;
-
   cursor: pointer;
-
   z-index: 20;
-
   touch-action: none;
 }
 
 
-
-/* Canvas */
-canvas {
-  background-color: black;
-  border-radius: 20px;
-  box-shadow: 0 0 40px rgba(0, 0, 0, 0.8);
-
-  width: 100%;
-  height: auto;
-
-  max-height: 100vh;
-  max-width: 100vw;
-
-  display: none;
-}
 
 /* Startscreen */
 #start-screen {
@@ -74,7 +96,6 @@ canvas {
   justify-content: center;
   flex-direction: column;
   align-items: center;
-
   border-radius: 20px;
 }
 
@@ -133,74 +154,77 @@ canvas {
   transform: scale(1.1);
 }
 
-.settings-content{
-  display:flex;
-  justify-content:space-between;
-  gap:40px;
-
-  margin-top:20px;
+.settings-content {
+  display: flex;
+  justify-content: space-between;
+  gap: 40px;
+  margin-top: 20px;
 }
 
 .settings-left,
-.settings-right{
-  width:45%;
+.settings-right {
+  width: 45%;
 }
 
 .settings-left p,
-.settings-right p{
-  margin:10px 0;
+.settings-right p {
+  margin: 10px 0;
 }
 
 #settings-window {
   position: absolute;
   width: 720px;
   height: 480px;
-
   background: rgba(0, 0, 0, 0.9);
   color: white;
-
   display: none;
-
   justify-content: center;
   align-items: center;
   flex-direction: column;
-
   text-align: center;
-
   border-radius: 20px;
-   overflow-y: auto;
+  overflow-y: auto;
+  z-index: 30;
+}
 
-   z-index: 30;
+#settings-window button {
+  margin-top: 30px;
+  padding: 12px 30px;
+  font-size: 18px;
+  border: none;
+  border-radius: 10px;
+  background: #ffcc00;
+  color: black;
+  cursor: pointer;
+  font-family: "Bungee", cursive;
+  transition: all 0.2s;
+}
+
+#settings-window button:hover {
+  transform: scale(1.1);
+  background: #ffd633;
 }
 
 #pause-screen {
   position: absolute;
   top: 0;
   left: 0;
-
   width: 100%;
-  height: 480px;
-
+  height: 100%;
   z-index: 10;
-
   display: none;
   justify-content: center;
   align-items: center;
-
   background: rgba(0, 0, 0, 0.6);
-
   border-radius: 20px;
 }
 
 .pause-panel {
   width: 300px;
-
   background: #1c1c1c;
   border: 3px solid #ffcc00;
-
   border-radius: 12px;
   padding: 25px;
-
   text-align: center;
   color: white;
 }
@@ -208,15 +232,11 @@ canvas {
 .pause-panel button {
   display: block;
   width: 100%;
-
   margin: 10px 0;
   padding: 10px;
-
   font-size: 18px;
-
   border: none;
   border-radius: 8px;
-
   background: #ffcc00;
   cursor: pointer;
 }
@@ -225,57 +245,69 @@ canvas {
   transform: scale(1.05);
 }
 
-#pause-btn{
-  position:absolute;
+#pause-btn {
+  position: absolute;
   top: 0;
-  right:110px;
+  right: 110px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 20;
+  touch-action: none;
+}
 
-  width:40px;
-  height:40px;
+#impressum-window {
+  position: absolute;
+  width: 720px;
+  height: 480px;
+  background: rgba(0, 0, 0, 0.95);
+  color: white;
+  display: none;
+  justify-content: center;
+  align-items: center;
+  border-radius: 20px;
+  z-index: 50;
+}
 
-  border:none;
-  border-radius:8px;
+.impressum-content {
+  text-align: center;
+  padding: 20px;
+}
 
-  background:rgba(0,0,0,0.6);
-  color:white;
-
-  font-size:20px;
-
-  cursor:pointer;
-
-  z-index:20;
-
-  touch-action:none;
-
-  display:none;
+.impressum-content button {
+  margin-top: 20px;
+  padding: 10px 20px;
+  font-family: "Bungee", cursive;
+  background: #ffcc00;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
 }
 
 #mobile-controls {
-  position:absolute;
-  bottom:10px;
-  left:0;
-  width:100%;
-
-  display:none;
-  justify-content:space-between;
-
-  padding:0 40px;
-  box-sizing:border-box;
+  position: absolute;
+  bottom: 10px;
+  left: 0;
+  width: 100%;
+  display: none;
+  justify-content: space-between;
+  padding: 0 40px;
+  box-sizing: border-box;
 }
 
 #mobile-controls button {
   width: 55px;
   height: 55px;
-
   font-size: 22px;
-
   border-radius: 50%;
   border: none;
-
   background: rgba(255, 204, 0, 0.9);
-
   cursor: pointer;
-
   touch-action: none;
   user-select: none;
 }
@@ -290,64 +322,105 @@ canvas {
   position: absolute;
   top: 0;
   left: 0;
-
   width: 720px;
   height: 480px;
-
   background: black;
   color: white;
-
   display: none;
-
   justify-content: center;
   align-items: center;
-
-  text-align: center;
-  font-size: 28px;
-
-  z-index: 20;
-
+  z-index: 50;
   border-radius: 20px;
 }
 
-#sound-toggle-btn{
-  position:absolute;
+/* Box */
+.rotate-box {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 20px;
+}
+
+/* Handy */
+.phone {
+  width: 70px;
+  height: 130px;
+  border: 4px solid white;
+  border-radius: 15px;
+  position: relative;
+  animation: rotatePhone 2s infinite ease-in-out;
+}
+
+/* Home-Button */
+.phone::after {
+  content: "";
+  width: 10px;
+  height: 10px;
+  background: white;
+  border-radius: 50%;
+  position: absolute;
+  bottom: 6px;
+  left: 50%;
+  transform: translateX(-50%);
+}
+
+/* Animation */
+@keyframes rotatePhone {
+  0% {
+    transform: rotate(0deg);
+  }
+  25% {
+    transform: rotate(90deg);
+  }
+  50% {
+    transform: rotate(90deg);
+  }
+  75% {
+    transform: rotate(0deg);
+  }
+  100% {
+    transform: rotate(0deg);
+  }
+}
+
+/* Text */
+.rotate-box p {
+  font-size: 22px;
+  align-items: center;
+  text-align: center;
+}
+
+#sound-toggle-btn {
+  position: absolute;
   top: 0;
-  right:60px;
-
-  width:40px;
-  height:40px;
-
-  border:none;
-  border-radius:8px;
-
-  background:rgba(0,0,0,0.6);
-  color:white;
-
-  font-size:20px;
-
-  cursor:pointer;
-
-  z-index:20;
-
-  touch-action:none;
-
-  display: none;
-} 
+  right: 60px;
+  width: 40px;
+  height: 40px;
+  border: none;
+  border-radius: 8px;
+  background: rgba(0, 0, 0, 0.6);
+  color: white;
+  font-size: 20px;
+  cursor: pointer;
+  z-index: 20;
+  touch-action: none;
+}
 
 @media (max-width: 980px) and (pointer: coarse) {
   #mobile-controls {
     display: flex;
+    display: none;
   }
 
-  #sound-toggle-btn{
-    display:block;
+  #sound-toggle-btn {
+    display: block;
+    display: none;
   }
 
   #pause-btn {
     display: block;
+    display: none;
   }
-
 }
 
 @media (max-width: 900px) and (orientation: portrait) {
