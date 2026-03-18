@@ -5,7 +5,7 @@ class MovableObject extends DrawableObject {
   acceleration = 1.5;
   energy = 100;
   lastHit = 0;
-  coin = 0; 
+  coin = 0;
   bottle = 0;
 
   applyGravity() {
@@ -37,30 +37,30 @@ class MovableObject extends DrawableObject {
   }
 
   hit() {
-  let now = new Date().getTime();
+    let now = new Date().getTime();
 
-  if (now - this.lastHit > 500) {
-    this.energy -= 5;
+    if (now - this.lastHit > 500) {
+      this.energy -= 5;
 
-    if (this.energy < 0) {
-      this.energy = 0;
+      if (this.energy < 0) {
+        this.energy = 0;
+      }
+
+      this.lastHit = now;
     }
-
-    this.lastHit = now;
   }
-}
 
   collectCoin() {
     this.coin += 10;
     if (this.coin > 100) {
-        this.coin = 100;
+      this.coin = 100;
     }
   }
 
-  collectBottle(){
+  collectBottle() {
     this.bottle += 10;
-    if(this.bottle > 100) {
-        this.bottle = 100;
+    if (this.bottle > 100) {
+      this.bottle = 100;
     }
   }
 
@@ -73,7 +73,6 @@ class MovableObject extends DrawableObject {
   isDead() {
     return this.energy <= 0;
   }
- 
 
   playAnimation(images) {
     let i = this.currentImage % images.length; // let i = 0 % 6; => 0, Rest 0
