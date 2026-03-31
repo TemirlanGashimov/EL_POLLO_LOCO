@@ -25,31 +25,7 @@ class DrawableObject {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
   }
 
-  drawFrame(ctx) {
-    /*
-    if (
-      this instanceof Character ||
-      this instanceof Chicken ||
-      this instanceof SmallChicken ||
-      this instanceof Endboss ||
-      this instanceof Coin ||
-      this instanceof Bottle
-    ) {
-      // damit übergeben wird die unten definierte code dass der die Chicken Character coins und Endboss in Käschen nimmt
-      ctx.beginPath();
-      ctx.lineWidth = "2";
-      ctx.strokeStyle = "red";
-
-      ctx.rect(
-        this.x + this.offset.left,
-        this.y + this.offset.top,
-        this.width - this.offset.left - this.offset.right,
-        this.height - this.offset.top - this.offset.bottom,
-      );
-      ctx.stroke();
-    }
-    */
-  }
+  drawFrame(ctx) {}
 
   //**
   //    * @param {Array} arr - ['img/image1.png', 'img/image2.png', ...]
