@@ -2,6 +2,7 @@ class Endboss extends MovableObject {
   height = 400;
   width = 250;
   y = 50;
+  speed = 1.5;
   energy = 100;
   isDead = false;
   isHurt = false;
@@ -60,7 +61,8 @@ class Endboss extends MovableObject {
   ];
 
   constructor() {
-    super().loadImage(this.IMAGES_WALK[0]);
+    super();
+    this.loadImage(this.IMAGES_WALK[0]);
     this.loadImages(this.IMAGES_WALK);
     this.loadImages(this.IMAGES_WALKING);
     this.loadImages(this.IMAGES_ATTACK);
@@ -71,52 +73,52 @@ class Endboss extends MovableObject {
   }
 
   animate() {
-  setInterval(() => {
-    if (!this.world || !this.world.gameRunning) return;
+    this.handleAnimation();
+    this.handleMovement();
+  }
 
-    if (this.isDead) {
-      this.playAnimation(this.IMAGES_DEAD);
-    } else if (this.isHurt) {
-      this.playAnimation(this.IMAGES_HURT);
-    } else if (this.isAttacking) {
-      this.playAnimation(this.IMAGES_ATTACK);
-    } else if (this.isPlayerNear()) {
-      this.playAnimation(this.IMAGES_WALK);
-    } else {
+  handleAnimation() {
+    this.intervalAnimation = setInterval(() => {
+      if (!this.world || !this.world.gameRunning || this.world.gameOver) return;
+
+      if (this.isDead) return this.playAnimation(this.IMAGES_DEAD);
+      if (this.isHurt) return this.playAnimation(this.IMAGES_HURT);
+      if (this.isAttacking) return this.playAnimation(this.IMAGES_ATTACK);
+      if (this.isPlayerNear()) return this.playAnimation(this.IMAGES_WALK);
+
       this.playAnimation(this.IMAGES_WALKING);
-    }
-  }, 200);
+    }, 200);
+  }
 
-  setInterval(() => {
-    if (!this.world || !this.world.gameRunning) return;
+  handleMovement() {
+    this.intervalMovement = setInterval(() => {
+      if (!this.world || !this.world.gameRunning || this.world.gameOver) return;
 
-    if (
+      if (this.canAttack()) this.attack();
+      if (this.canMove()) this.x -= this.speed;
+    }, 1000 / 60);
+  }
+
+  canAttack() {
+    return (
       this.isPlayerVeryNear() &&
       !this.isDead &&
       !this.isAttacking &&
       !this.isHurt
-    ) {
-      this.attack();
-    }
+    );
+  }
 
-    if (
-      this.isPlayerNear() &&
-      !this.isDead &&
-      !this.isAttacking &&
-      !this.isHurt
-    ) {
-      this.x -= 1;
-    }
-  }, 1000 / 60);
-}
+  canMove() {
+    return (
+      this.isPlayerNear() && !this.isDead && !this.isAttacking && !this.isHurt
+    );
+  }
 
   hit() {
     let now = new Date().getTime();
-
     if (now - this.lastHit < 500) return;
 
     this.lastHit = now;
-
     if (this.energy > 0) {
       this.energy -= 20;
       this.isHurt = true;
@@ -129,6 +131,8 @@ class Endboss extends MovableObject {
     if (this.energy <= 0) {
       this.energy = 0;
       this.isDead = true;
+
+      clearInterval(this.intervalMovement);
     }
   }
 
@@ -146,12 +150,12 @@ class Endboss extends MovableObject {
   }
 
   isPlayerNear() {
-  if (!this.world) return false;
-  return Math.abs(this.x - this.world.character.x) < 600;
-}
+    if (!this.world || !this.world.gameRunning || this.world.gameOver) return false;
+    return Math.abs(this.x - this.world.character.x) < 600;
+  }
 
   isPlayerVeryNear() {
-  if (!this.world) return false;
-  return Math.abs(this.x - this.world.character.x) < 200;
-}
+    if (!this.world || !this.world.gameRunning || this.world.gameOver) return false;
+    return Math.abs(this.x - this.world.character.x) < 200;
+  }
 }
