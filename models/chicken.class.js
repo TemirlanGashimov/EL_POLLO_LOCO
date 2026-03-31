@@ -17,11 +17,9 @@ class Chicken extends MovableObject {
     "img/3_enemies_chicken/chicken_normal/1_walk/3_w.png",
   ];
 
-  IMAGES_DEAD = [
-    "img/3_enemies_chicken/chicken_normal/2_dead/dead.png"
-  ];
+  IMAGES_DEAD = ["img/3_enemies_chicken/chicken_normal/2_dead/dead.png"];
 
-  chickenDead_sound = new Audio ("sounds/chicken/chickenDead.mp3");
+  chickenDead_sound = new Audio("sounds/chicken/chickenDead.mp3");
 
   constructor() {
     super().loadImage("img/3_enemies_chicken/chicken_normal/1_walk/1_w.png");
@@ -35,34 +33,42 @@ class Chicken extends MovableObject {
     this.animate();
   }
 
-  die(){
-    if (!this.isDeadChicken){
+  die() {
+    if (this.isDeadChicken) return;
+
     this.isDeadChicken = true;
     this.speed = 0;
-    this.playAnimation(this.IMAGES_DEAD);
-    if(soundEnabled){
-    this.chickenDead_sound.play();
-    }}
+
+    if (soundEnabled) {
+      this.chickenDead_sound.currentTime = 0;
+      this.chickenDead_sound.play();
+    }
   }
 
   animate() {
-    setInterval(() => {
-      if (!this.world || !this.world.gameRunning) return;
+    this.handleMovement();
+    this.handleAnimation();
+  }
 
-      if(!this.isDeadChicken){
+  handleMovement() {
+    setInterval(() => {
+      if (!this.world || !this.world.gameRunning || this.world.gameOver) return;
+
+      if (!this.isDeadChicken) {
         this.moveLeft();
       }
-    }, 1000 / 60); // 60 mal pro sekunde
-
-    setInterval(() => {
-
-      if (!this.world || this.world.gameRunning) return;
-
-  if (this.isDeadChicken) {
-    this.playAnimation(this.IMAGES_DEAD);
-  } else {
-    this.playAnimation(this.IMAGES_WALKING);
+    }, 1000 / 60);
   }
-}, 200);
+
+  handleAnimation() {
+    setInterval(() => {
+      if (!this.world || !this.world.gameRunning || this.world.gameOver) return;
+
+      if (this.isDeadChicken) {
+        this.playAnimation(this.IMAGES_DEAD);
+      } else {
+        this.playAnimation(this.IMAGES_WALKING);
+      }
+    }, 200);
   }
 }
