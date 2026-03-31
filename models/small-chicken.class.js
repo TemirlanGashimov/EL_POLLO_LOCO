@@ -2,6 +2,7 @@ class SmallChicken extends MovableObject {
   height = 60;
   width = 60;
   y = 365;
+  isDeadChicken = false;
 
   offset = {
     top: 5,
@@ -23,7 +24,8 @@ class SmallChicken extends MovableObject {
   chickenDead_sound = new Audio ("sounds/chicken/chickenDead.mp3");
 
   constructor() {
-    super().loadImage(this.IMAGES_WALKING[0]);
+    super();
+    this.loadImage(this.IMAGES_WALKING[0]);
     this.loadImages(this.IMAGES_WALKING);
 
     this.x = 300 + Math.random() * 2000;
@@ -33,20 +35,21 @@ class SmallChicken extends MovableObject {
   }
 
   animate() {
-  setInterval(() => {
-    if (!this.world || !this.world.gameRunning) return;
+  this.handleMovement();
+  this.handleAnimation();
+}
 
-    if (!this.isDeadChicken) {
-      this.moveLeft();
-    }
+handleMovement() {
+  setInterval(() => {
+    if (!this.world || !this.world.gameRunning || this.world.gameOver) return;
+    if (!this.isDeadChicken) this.moveLeft();
   }, 1000 / 60);
+}
 
+handleAnimation() {
   setInterval(() => {
-    if (!this.world || !this.world.gameRunning) return;
-
-    if (!this.isDeadChicken) {
-      this.playAnimation(this.IMAGES_WALKING);
-    }
+    if (!this.world || !this.world.gameRunning || this.world.gameOver) return;
+    if (!this.isDeadChicken) this.playAnimation(this.IMAGES_WALKING);
   }, 200);
 }
 

@@ -10,6 +10,8 @@ class MovableObject extends DrawableObject {
 
   applyGravity() {
     setInterval(() => {
+      if (!this.world || !this.world.gameRunning || this.world.gameOver) return;
+
       if (this.isAboveGround() || this.speedY > 0) {
         this.y -= this.speedY;
         this.speedY -= this.acceleration;
@@ -37,7 +39,7 @@ class MovableObject extends DrawableObject {
   }
 
   hit() {
-    let now = new Date().getTime();
+    let now = Date.now();
 
     if (now - this.lastHit > 500) {
       this.energy -= 5;
@@ -65,9 +67,9 @@ class MovableObject extends DrawableObject {
   }
 
   isHurt() {
-    let timepassed = new Date().getTime() - this.lastHit; // Dfference in ms
-    timepassed = timepassed / 1000; //Difference in s
-    return timepassed < 1;
+    let timePassed = new Date().getTime() - this.lastHit; // Dfference in ms
+    timePassed = timePassed / 1000; //Difference in s
+    return timePassed < 1;
   }
 
   isDead() {

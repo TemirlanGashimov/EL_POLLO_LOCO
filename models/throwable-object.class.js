@@ -21,9 +21,8 @@ class ThrowableObject extends MovableObject {
   bottleBreak_sound = new Audio("sounds/throwable/bottleBreak.mp3");
 
   constructor(x, y, otherDirection) {
-    super().loadImage(
-      "img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png",
-    );
+    super();
+    this.loadImage("img/6_salsa_bottle/bottle_rotation/1_bottle_rotation.png");
     this.loadImages(this.IMAGES_BOTTLE);
     this.loadImages(this.SPLASH_IMAGES);
     this.x = x;
@@ -36,43 +35,70 @@ class ThrowableObject extends MovableObject {
   }
 
   animate() {
-    setInterval(() => {
-      if (!this.isBroken) {
-        this.playAnimation(this.IMAGES_BOTTLE);
-      }
-    }, 80);
-  }
+  setInterval(() => {
+
+    if (!this.world?.gameRunning && !this.world?.gameOver) return;
+
+    if (!this.isBroken) {
+      this.playAnimation(this.IMAGES_BOTTLE);
+    }
+
+  }, 80);
+}
 
   throw() {
     this.speedY = 25;
     this.applyGravity();
-    this.throwInterval = setInterval(() => {
-      //das hier nur die bewegund von flasche
-      if (!this.isBroken) {
-        this.x += this.otherDirection ? -8 : 8;
+    this.handleThrowMovement();
+  }
 
-        if (this.y >= 360) {
-          this.break();
-        }
-      }
-    }, 16);
+  handleThrowMovement() {
+  this.throwInterval = setInterval(() => {
+
+    if (this.isBroken) return;
+
+    // 🔥 DAS HINZUFÜGEN
+    if (!this.world?.gameRunning && !this.world?.gameOver) return;
+
+    this.moveBottle();
+    this.checkGroundHit();
+
+  }, 16);
+}
+
+  moveBottle() {
+    this.x += this.otherDirection ? -8 : 8;
+  }
+
+  checkGroundHit() {
+    if (this.y >= 360) {
+      this.break();
+    }
   }
 
   break() {
     if (this.isBroken) return;
 
     this.isBroken = true;
+    this.stopThrow();
+    this.playBreakSound();
+    this.startSplashAnimation();
+  }
 
+  stopThrow() {
     clearInterval(this.throwInterval);
-
     this.speedY = 0;
     this.speedX = 0;
+  }
 
-    if (soundEnabled){
-    this.bottleBreak_sound.currentTime = 0;
-    this.bottleBreak_sound.play().catch(() => {});
+  playBreakSound() {
+    if (soundEnabled) {
+      this.bottleBreak_sound.currentTime = 0;
+      this.bottleBreak_sound.play().catch(() => {});
     }
+  }
 
+  startSplashAnimation() {
     let i = 0;
 
     let splashInterval = setInterval(() => {
@@ -81,13 +107,15 @@ class ThrowableObject extends MovableObject {
 
       if (i >= this.SPLASH_IMAGES.length) {
         clearInterval(splashInterval);
-
-        //  HIER entfernen wir die Flasche aus der World
-        setTimeout(() => {
-          this.markedForDeletion = true;
-        }, 200);
+        this.removeBottle();
       }
     }, 60);
+  }
+
+  removeBottle() {
+    setTimeout(() => {
+      this.markedForDeletion = true;
+    }, 200);
   }
 
   splash() {
