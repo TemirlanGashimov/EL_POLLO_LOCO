@@ -85,15 +85,7 @@ function showVictory() {
 }
 
 function restartGame() {
-  document.getElementById("victory-screen").style.display = "none";
-  document.getElementById("game-over-screen").style.display = "none";
-  document.getElementById("pause-screen").style.display = "none";
-  document.getElementById("canvas").style.display = "block";
-
-  paused = false;
-
-  world = new World(canvas, keyboard);
-  world.gameRunning = true;
+  location.reload(); // 🔥 FIXT ALLES
 }
 
 function resumeGame() {
@@ -267,7 +259,7 @@ function stopAllSounds() {
       world.character.sleeping_sound,
       world.character.jumping_sound,
       world.character.hurts_sound,
-      world.character.deads_sound,
+      // world.character.deads_sound,
       world.character.coinCollect_sound,
       world.character.bottleCollect_sound,
     ];
