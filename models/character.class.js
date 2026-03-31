@@ -117,160 +117,192 @@ class Character extends MovableObject {
   }
 
   animate() {
+    this.handleMovement();
+    this.handleAnimation();
+  }
+
+  handleMovement() {
     setInterval(() => {
-      if (!this.world.gameRunning) return;
+      if (!this.world.gameRunning || this.world.gameOver) return;
 
-      let isMoving = false;
+      let isMoving = this.moveRightCondition() || this.moveLeftCondition();
 
-      if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
-        this.moveRight(); // hier Charakter schaut nach vorne
-        this.otherDirection = false;
-        isMoving = true;
-      }
-
-      if (this.world.keyboard.LEFT && this.x > 0) {
-        this.moveLeft();
-        this.otherDirection = true; // wenn ich linke taste drücke bild gespiegelt quasi Charakter dreht sich zurück
-        isMoving = true;
-      }
-
-      if (isMoving && !this.isAboveGround()) {
-        if (soundEnabled && this.walking_sound.paused) {
-          this.walking_sound.play();
-        }
-      } else {
-        this.walking_sound.pause();
-        this.walking_sound.currentTime = 0;
-      }
-
-      if (this.world.keyboard.SPACE && !this.isAboveGround()) {
-        this.jump();
-        this.lastActionTime = Date.now();
-
-        if (soundEnabled && this.jumping_sound.paused) {
-          this.jumping_sound.currentTime = 0;
-          this.jumping_sound.play();
-        }
-      }
-
-      this.world.camera_x = -this.x + 100;
+      this.handleWalkingSound(isMoving);
+      this.handleJump();
+      this.updateCamera();
     }, 1000 / 60);
+  }
 
-    setInterval(() => {
-      if (!this.world.gameRunning) return;
+  moveRightCondition() {
+    if (this.world.keyboard.RIGHT && this.x < this.world.level.level_end_x) {
+      this.moveRight();
+      this.otherDirection = false;
+      return true;
+    }
+    return false; // 🔥 hinzufügen
+  }
 
-      if (this.isDead()) {
-        this.playAnimation(this.IMAGES_DEAD);
+  moveLeftCondition() {
+    if (this.world.keyboard.LEFT && this.x > 0) {
+      this.moveLeft();
+      this.otherDirection = true;
+      return true;
+    }
+    return false; // 🔥 hinzufügen
+  }
 
-        this.sleeping_sound.pause();
-        this.walking_sound.pause();
+  isWalking() {
+    return (
+      this.world.keyboard.RIGHT ||
+      this.world.keyboard.LEFT ||
+      this.world.keyboard.D ||
+      this.world.keyboard.SPACE ||
+      this.world.keyboard.F
+    );
+  }
 
-        this.sleeping_sound.currentTime = 0;
-        this.walking_sound.currentTime = 0;
+  stopAllSounds() {
+    this.stopSleepingSound();
+    this.walking_sound.pause();
+    this.walking_sound.currentTime = 0;
+  }
 
-        if (soundEnabled && !this.deadSoundPlayed) {
-          this.deads_sound.volume = 0.3;
-          this.deads_sound.currentTime = 0;
-          this.deads_sound.play();
+  stopSleepingSound() {
+    this.sleeping_sound.pause();
+    this.sleeping_sound.currentTime = 0;
+  }
 
-          this.deadSoundPlayed = true;
-        }
-      } else if (this.isHurt() && !this.isDead()) {
-        this.playAnimation(this.IMAGES_HURT);
+  handleWalkAnimation() {
+    this.playAnimation(this.IMAGES_WALKING);
+    this.idleTime = 0;
+    this.stopSleepingSound();
+  }
 
-        // 🔥 STOP SLEEP SOUND SOFORT
-        this.sleeping_sound.pause();
-        this.sleeping_sound.currentTime = 0;
+  handleJumpAnimation() {
+    this.playAnimation(this.IMAGES_JUMPIMG);
+    this.idleTime = 0;
+    this.stopSleepingSound();
+  }
 
-        let now = Date.now();
-
-        if (soundEnabled && now - this.lastHitSound > 500) {
-          this.hurts_sound.currentTime = 0;
-          this.hurts_sound.play();
-          this.lastHitSound = now;
-        }
-      } else if (this.isAboveGround()) {
-        this.playAnimation(this.IMAGES_JUMPIMG);
-
-        this.idleTime = 0; // 🔥 FIX
-
-        if (!this.sleeping_sound.paused) {
-          this.sleeping_sound.pause();
-          this.sleeping_sound.currentTime = 0;
-        }
-      } else if (
-        this.world.keyboard.RIGHT ||
-        this.world.keyboard.LEFT ||
-        this.world.keyboard.D ||
-        this.world.keyboard.SPACE ||
-        this.world.keyboard.F
-      ) {
-        //Walk Animation
-        this.playAnimation(this.IMAGES_WALKING);
-        this.idleTime = 0; // timer auf 0 setzen wieder
-
-        if (!this.sleeping_sound.paused) {
-          this.sleeping_sound.pause();
-          this.sleeping_sound.currentTime = 0;
-        }
-      } else {
-        let now = Date.now();
-
-        if (now - this.lastActionTime < 4000) {
-          this.idleTime = 0;
-          this.playAnimation(this.IMAGES_IDLE);
-
-          if (!this.sleeping_sound.paused) {
-            this.sleeping_sound.pause();
-            this.sleeping_sound.currentTime = 0;
-          }
-          return;
-        }
-          this.idleTime += 120;
-
-          if (this.idleTime > 3000) {
-            this.playAnimation(this.IMAGES_SLEEP);
-
-            if (soundEnabled && this.sleeping_sound.paused) {
-              this.sleeping_sound.play();
-            }
-          } else {
-            this.playAnimation(this.IMAGES_IDLE);
-
-            if (!this.sleeping_sound.paused) {
-              this.sleeping_sound.pause();
-              this.sleeping_sound.currentTime = 0;
-            }
-        }
+  handleWalkingSound(isMoving) {
+    if (isMoving && !this.isAboveGround()) {
+      if (soundEnabled && this.walking_sound.paused) {
+        this.walking_sound.play();
       }
-    }, 120);
+    } else {
+      this.walking_sound.pause();
+      this.walking_sound.currentTime = 0;
+    }
+  }
+
+  handleJump() {
+    if (this.world.keyboard.SPACE && !this.isAboveGround()) {
+      this.jump();
+      this.lastActionTime = Date.now();
+
+      if (soundEnabled && this.jumping_sound.paused) {
+        this.jumping_sound.currentTime = 0;
+        this.jumping_sound.play();
+      }
+    }
+  }
+
+  updateCamera() {
+    this.world.camera_x = -this.x + 100;
+  }
+
+  handleAnimation() {
+  setInterval(() => {
+    if (!this.world.gameRunning && !this.isDead()) return;
+
+    if (this.isDead()) return this.handleDead();
+    if (this.isHurt()) return this.handleHurt();
+    if (this.isAboveGround()) return this.handleJumpAnimation();
+    if (this.isWalking()) return this.handleWalkAnimation();
+
+    this.handleIdle();
+  }, 120);
+}
+
+  handleDead() {
+    this.playAnimation(this.IMAGES_DEAD);
+    this.stopAllSounds();
+
+    if (soundEnabled && !this.deadSoundPlayed) {
+      this.deads_sound.volume = 0.3;
+      this.deads_sound.currentTime = 0;
+      this.deads_sound.play();
+      this.deadSoundPlayed = true;
+    }
+  }
+
+  handleHurt() {
+    this.playAnimation(this.IMAGES_HURT);
+    this.lastActionTime = Date.now();
+    this.stopSleepingSound();
+
+    let now = Date.now();
+
+    if (soundEnabled && now - this.lastHitSound > 500) {
+      this.hurts_sound.currentTime = 0;
+      this.hurts_sound.play();
+      this.lastHitSound = now;
+    }
+  }
+
+  handleIdle() {
+    let now = Date.now();
+
+    if (now - this.lastActionTime < 4000) {
+      this.playAnimation(this.IMAGES_IDLE);
+      this.stopSleepingSound();
+      return;
+    }
+
+    this.idleTime += 120;
+
+    if (this.idleTime > 3000) {
+      this.playAnimation(this.IMAGES_SLEEP);
+      if (soundEnabled && this.sleeping_sound.paused) {
+        this.sleeping_sound.play();
+      }
+    } else {
+      this.playAnimation(this.IMAGES_IDLE);
+      this.stopSleepingSound();
+    }
   }
 
   jump() {
     this.speedY = 20;
+    this.currentImage = 0;
   }
 
   collectCoin() {
-  this.coin += 10;
-
-  if (soundEnabled) {
-    this.coinCollect_sound.volume = 0.3; // 🔊 Lautstärke
-    this.coinCollect_sound.currentTime = 0;
-    this.coinCollect_sound.play();
-  }
-}
-
-collectBottle() {
-  if (this.bottle < 100) {
-    this.bottle += 10;
+    this.coin += 10;
 
     if (soundEnabled) {
-      this.bottleCollect_sound.volume = 0.3; // 🔊 Lautstärke
-      this.bottleCollect_sound.currentTime = 0;
-      this.bottleCollect_sound.play();
+      this.coinCollect_sound.volume = 0.3; // 🔊 Lautstärke
+      this.coinCollect_sound.currentTime = 0;
+      this.coinCollect_sound.play();
     }
   }
-}
+
+  collectBottle() {
+    if (this.bottle < 100) {
+      this.bottle += 10;
+
+      if (soundEnabled) {
+        this.bottleCollect_sound.volume = 0.3; // 🔊 Lautstärke
+        this.bottleCollect_sound.currentTime = 0;
+        this.bottleCollect_sound.play();
+      }
+    }
+  }
+
+  isSleeping() {
+    let timePassed = Date.now() - this.lastActionTime;
+    return timePassed > 3000;
+  }
 
   hit() {
     super.hit();
