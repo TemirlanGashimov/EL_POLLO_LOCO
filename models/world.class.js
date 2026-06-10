@@ -1,3 +1,6 @@
+/**
+ * Compiles and manages the entire game world, handling drawing, updates, and interactions.
+ */
 class World {
   character = new Character();
   level;

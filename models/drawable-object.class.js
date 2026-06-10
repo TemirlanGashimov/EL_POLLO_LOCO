@@ -1,13 +1,32 @@
+/**
+ * Represents a basic object that can be drawn on the canvas.
+ */
 class DrawableObject {
+  /** @type {HTMLImageElement} The image element of the object */
   img;
+
+  /** @type {Object<string, HTMLImageElement>} Cache containing preloaded images */
   imageCache = {};
+
+  /** @type {number} Index of the current animation image */
   currentImage = 0;
 
+  /** @type {number} The X coordinate of the object */
   x = 120;
-  y = 280;
-  height = 150; // höhe von objecten wie Charakter Chicken
-  width = 100; // breite von objecten wie Character und Chicken
 
+  /** @type {number} The Y coordinate of the object */
+  y = 280;
+
+  /** @type {number} Height of the object */
+  height = 150;
+
+  /** @type {number} Width of the object */
+  width = 100;
+
+  /**
+   * Collision offset values for accurate hit detection.
+   * @type {{top: number, left: number, right: number, bottom: number}}
+   */
   offset = {
     top: 0,
     left: 0,
@@ -15,21 +34,33 @@ class DrawableObject {
     bottom: 0,
   };
 
-  //loadImage('img/test.png);
+  /**
+   * Loads a single image from the given path.
+   * @param {string} path - The path to the image file.
+   */
   loadImage(path) {
-    this.img = new Image(); //this.img = document.getElementById('image') <img id="image" src>
+    this.img = new Image();
     this.img.src = path;
   }
 
+  /**
+   * Draws the object on the canvas.
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+   */
   draw(ctx) {
     ctx.drawImage(this.img, this.x, this.y, this.width, this.height);
   }
 
+  /**
+   * Optional helper to draw debug frames around collision boxes.
+   * @param {CanvasRenderingContext2D} ctx - The canvas rendering context.
+   */
   drawFrame(ctx) {}
 
-  //**
-  //    * @param {Array} arr - ['img/image1.png', 'img/image2.png', ...]
-  //
+  /**
+   * Preloads multiple images into the image cache.
+   * @param {string[]} arr - Array of image paths.
+   */
   loadImages(arr) {
     arr.forEach((path) => {
       let img = new Image();

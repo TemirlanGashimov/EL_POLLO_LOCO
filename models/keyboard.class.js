@@ -1,3 +1,6 @@
+/**
+ * Holds boolean states representing whether keyboard keys are currently pressed.
+ */
 class Keyboard {
     LEFT = false;
     RIGHT = false;

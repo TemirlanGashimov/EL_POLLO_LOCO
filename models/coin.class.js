@@ -1,3 +1,7 @@
+/**
+ * Represents a collectable coin in the game.
+ * @extends MovableObject
+ */
 class Coin extends MovableObject {
 
 

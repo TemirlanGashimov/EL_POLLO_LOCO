@@ -1,4 +1,8 @@
-// const level1 = new Level(
+/**
+ * Creates and returns the configuration for Level 1, including all
+ * enemies, clouds, collectible items, and background layers.
+ * @returns {Level} The populated Level 1 instance.
+ */
 function createLevel1() {
   return new Level(
     [

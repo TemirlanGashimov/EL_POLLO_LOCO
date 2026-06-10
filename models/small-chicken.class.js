@@ -1,3 +1,7 @@
+/**
+ * Represents a small walking chicken enemy.
+ * @extends MovableObject
+ */
 class SmallChicken extends MovableObject {
   height = 60;
   width = 60;

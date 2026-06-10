@@ -1,3 +1,7 @@
+/**
+ * Represents a standard walking chicken enemy.
+ * @extends MovableObject
+ */
 class Chicken extends MovableObject {
   y = 355; // platzierung auf y Achse // sobald die höche sich änder muss man auch die y Achse ändern damit die auf eine ebene sind +-
   height = 70; // höche von unsere chicken wie hoch/groß die sind

@@ -1,3 +1,7 @@
+/**
+ * Represents a decorative cloud object floating in the background.
+ * @extends MovableObject
+ */
 class Cloud extends MovableObject {
   y = 20;
   width = 500;

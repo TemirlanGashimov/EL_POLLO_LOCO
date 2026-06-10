@@ -1,3 +1,7 @@
+/**
+ * Represents the coin status bar shown on the HUD.
+ * @extends DrawableObject
+ */
 class StatusBarCoin extends DrawableObject {
   IMAGES = [
     "img/7_statusbars/1_statusbar/1_statusbar_coin/green/0.png",

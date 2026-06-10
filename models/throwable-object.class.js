@@ -1,3 +1,7 @@
+/**
+ * Represents a throwable salsa bottle that deals damage to enemies.
+ * @extends MovableObject
+ */
 class ThrowableObject extends MovableObject {
   isBroken = false;
   throwInterval;

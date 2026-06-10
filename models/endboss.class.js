@@ -1,3 +1,7 @@
+/**
+ * Represents the final endboss chicken enemy.
+ * @extends MovableObject
+ */
 class Endboss extends MovableObject {
   height = 400;
   width = 250;

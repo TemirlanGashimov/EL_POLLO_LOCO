@@ -1,3 +1,7 @@
+/**
+ * Represents the health status bar shown on the HUD.
+ * @extends DrawableObject
+ */
 class StatusBarHealth extends DrawableObject {
   IMAGES = [
     "img/7_statusbars/1_statusbar/2_statusbar_health/green/0.png", // 0

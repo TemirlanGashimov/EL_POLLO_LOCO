@@ -1,3 +1,7 @@
+/**
+ * Represents the health status bar of the final endboss.
+ * @extends DrawableObject
+ */
 class StatusBarEndboss extends DrawableObject {
 
     IMAGES = [

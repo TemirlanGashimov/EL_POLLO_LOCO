@@ -1,11 +1,32 @@
+/**
+ * @file game.js
+ * @description Global entry point and control logic for the El Pollo Loco game.
+ */
+
+/** @type {HTMLCanvasElement} The main game canvas */
 let canvas;
+
+/** @type {World} The active game world instance */
 let world;
+
+/** @type {Keyboard} Keyboard handler instance */
 let keyboard = new Keyboard();
+
+/** @type {boolean} Indicates if the game loop is running */
 let gameRunning = true;
+
+/** @type {boolean} Indicates if the game is currently paused */
 let paused = false;
+
+/** @type {boolean} Legacy sound state indicator */
 let soundOn = true;
+
+/** @type {boolean} Indicates if sound effects and music are enabled */
 let soundEnabled = true;
 
+/**
+ * Initializes the game layout, preloads settings, and binds basic UI event listeners.
+ */
 function init() {
   canvas = document.getElementById("canvas");
   document.getElementById("start-btn").addEventListener("click", startGame);
@@ -28,6 +49,9 @@ function init() {
   }
 }
 
+/**
+ * Toggles the fullscreen mode of the game wrapper.
+ */
 function toggleFullscreen() {
   let game = document.getElementById("game-wrapper");
   if (!document.fullscreenElement) {
@@ -37,6 +61,10 @@ function toggleFullscreen() {
   }
 }
 
+/**
+ * Detects if the current device has touch capabilities.
+ * @returns {boolean} True if the device supports touch interaction.
+ */
 function isTouchDevice() {
   return (
     window.matchMedia("(pointer: coarse)").matches ||
@@ -44,6 +72,9 @@ function isTouchDevice() {
   );
 }
 
+/**
+ * Toggles the display state of mobile touch controls based on device capabilities.
+ */
 function showMobileControls() {
   const controls = document.getElementById("mobile-controls");
 
@@ -52,6 +83,9 @@ function showMobileControls() {
   controls.style.display = isTouchDevice() ? "flex" : "none";
 }
 
+/**
+ * Hides the start screen, displays the canvas and controls, and instantiates the game world.
+ */
 function startGame() {
   document.getElementById("start-screen").style.display = "none";
   document.getElementById("canvas").style.display = "block";
@@ -74,20 +108,32 @@ function startGame() {
   }
 }
 
+/**
+ * Hides the canvas and displays the game over screen.
+ */
 function showGameOver() {
   document.getElementById("canvas").style.display = "none";
   document.getElementById("game-over-screen").style.display = "block";
 }
 
+/**
+ * Hides the canvas and displays the victory screen.
+ */
 function showVictory() {
   document.getElementById("canvas").style.display = "none";
   document.getElementById("victory-screen").style.display = "block";
 }
 
+/**
+ * Reloads the browser page to completely restart the game and clear intervals.
+ */
 function restartGame() {
-  location.reload(); // 🔥 FIXT ALLES
+  location.reload();
 }
 
+/**
+ * Closes the pause screen, resumes the game loop, and resumes the boss sound if active.
+ */
 function resumeGame() {
   document.getElementById("pause-screen").style.display = "none";
 
@@ -101,6 +147,9 @@ function resumeGame() {
   paused = false;
 }
 
+/**
+ * Pauses or resumes the game, updating UI displays and pausing character/boss audio.
+ */
 function togglePause() {
   if (!paused) {
     document.getElementById("pause-screen").style.display = "flex";
@@ -124,26 +173,41 @@ function togglePause() {
   }
 }
 
+/**
+ * Opens the Impressum overlay window and pauses the game running state.
+ */
 function openImpressum() {
   document.getElementById("impressum-window").style.display = "flex";
 
   if (world) {
-    world.gameRunning = false; // 🔥 pausiert Spiel automatisch
+    world.gameRunning = false;
   }
 }
 
+/**
+ * Closes the Impressum overlay window.
+ */
 function closeImpressum() {
   document.getElementById("impressum-window").style.display = "none";
 }
 
+/**
+ * Opens the settings overlay window.
+ */
 function openSettings() {
   document.getElementById("settings-window").style.display = "flex";
 }
 
+/**
+ * Closes the settings overlay window.
+ */
 function closeSettings() {
   document.getElementById("settings-window").style.display = "none";
 }
 
+/**
+ * Event listener for keydown events to update the keyboard input states.
+ */
 window.addEventListener("keydown", (e) => {
   if (e.keyCode == 39) {
     keyboard.RIGHT = true;
@@ -168,12 +232,15 @@ window.addEventListener("keydown", (e) => {
   if (e.keyCode == 68) {
     keyboard.D = true;
   }
+
   if (e.keyCode == 70) {
-    // F
     keyboard.F = true;
   }
 });
 
+/**
+ * Event listener for keyup events to reset the keyboard input states.
+ */
 window.addEventListener("keyup", (e) => {
   if (e.keyCode == 39) {
     keyboard.RIGHT = false;
@@ -194,14 +261,19 @@ window.addEventListener("keyup", (e) => {
   if (e.keyCode == 32) {
     keyboard.SPACE = false;
   }
+
   if (e.keyCode == 68) {
     keyboard.D = false;
   }
+
   if (e.keyCode == 70) {
     keyboard.F = false;
   }
 });
 
+/**
+ * Event listener for keydown events to handle Escape key (close settings or toggle pause).
+ */
 window.addEventListener("keydown", function (e) {
   if (e.key === "Escape") {
     let settings = document.getElementById("settings-window");
@@ -217,7 +289,9 @@ window.addEventListener("keydown", function (e) {
   }
 });
 
-
+/**
+ * Sets up touch event listeners on mobile UI buttons to update keyboard state.
+ */
 function setupMobileControls() {
   document.getElementById("btn-left").addEventListener("touchstart", () => {
     keyboard.LEFT = true;
@@ -260,6 +334,9 @@ function setupMobileControls() {
   });
 }
 
+/**
+ * Stops all active loops and sounds for character and endboss.
+ */
 function stopAllSounds() {
   if (world && world.character) {
     let sounds = [
@@ -267,7 +344,6 @@ function stopAllSounds() {
       world.character.sleeping_sound,
       world.character.jumping_sound,
       world.character.hurts_sound,
-      // world.character.deads_sound,
       world.character.coinCollect_sound,
       world.character.bottleCollect_sound,
     ];
@@ -284,6 +360,9 @@ function stopAllSounds() {
   }
 }
 
+/**
+ * Toggles soundEnabled boolean, saves setting to localStorage, and updates UI labels.
+ */
 function toggleSound() {
   soundEnabled = !soundEnabled;
 
@@ -303,6 +382,10 @@ function toggleSound() {
   }
 }
 
+/**
+ * Adjusts volume level for all audio elements.
+ * @param {number} value - Volume scale factor.
+ */
 function setGameVolume(value) {
   document.querySelectorAll("audio").forEach((sound) => {
     sound.volume = value * 0.05;

@@ -1,3 +1,7 @@
+/**
+ * Represents the playable character Pepe in the game.
+ * @extends MovableObject
+ */
 class Character extends MovableObject {
   height = 300;
   y = 30;
