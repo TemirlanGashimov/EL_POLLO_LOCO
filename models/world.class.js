@@ -96,7 +96,10 @@ class World {
     enemy.die();
 
     setTimeout(() => {
-      this.level.enemies.splice(index, 1);
+      let currentIdx = this.level.enemies.indexOf(enemy);
+      if (currentIdx > -1) {
+        this.level.enemies.splice(currentIdx, 1);
+      }
     }, 500);
   }
 
@@ -171,7 +174,10 @@ class World {
     bottle.break();
 
     setTimeout(() => {
-      this.level.enemies.splice(index, 1);
+      let currentIdx = this.level.enemies.indexOf(enemy);
+      if (currentIdx > -1) {
+        this.level.enemies.splice(currentIdx, 1);
+      }
     }, 500);
   }
 
@@ -237,6 +243,13 @@ class World {
     this.checkBossDead();
     this.checkCollisions();
     this.checkBuyBottle();
+    this.cleanUpObjects();
+  }
+
+  cleanUpObjects() {
+    this.throwableObjects = this.throwableObjects.filter(
+      (o) => !o.markedForDeletion,
+    );
   }
 
  checkGameOver() {

@@ -59,7 +59,7 @@ handleAnimation() {
   this.isDeadChicken = true;
   this.speed = 0;
 
-  this.loadImage(this.IMAGE_DEAD);
+  this.loadImage(this.IMAGE_DEAD[0]);
 
   if(soundEnabled){
     this.chickenDead_sound.play();
