@@ -27,6 +27,9 @@ class MovableObject extends DrawableObject {
   /** @type {number} Percentage/count of collected bottles */
   bottle = 0;
 
+  /** @type {number} The ground Y level where the object lands */
+  groundY = 140;
+
   /**
    * Applies continuous gravity to the object if it is above ground or moving upwards.
    * Also snaps characters to the ground when they land.
@@ -40,7 +43,7 @@ class MovableObject extends DrawableObject {
         this.speedY -= this.acceleration;
       } else {
         if (this instanceof Character) {
-          this.y = 140;
+          this.y = this.groundY;
           this.speedY = 0;
         }
       }
@@ -56,7 +59,7 @@ class MovableObject extends DrawableObject {
     if (this instanceof ThrowableObject) {
       return true;
     } else {
-      return this.y < 140;
+      return this.y < this.groundY;
     }
   }
 
