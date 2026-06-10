@@ -49,8 +49,12 @@ class World {
   throwBottle() {
     this.character.lastActionTime = Date.now();
 
+    let spawnX = this.character.otherDirection
+      ? this.character.x - 50
+      : this.character.x + 100;
+
     let bottle = new ThrowableObject(
-      this.character.x + 100,
+      spawnX,
       this.character.y + 100,
       this.character.otherDirection,
     );

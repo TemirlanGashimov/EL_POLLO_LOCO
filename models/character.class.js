@@ -123,7 +123,7 @@ class Character extends MovableObject {
 
   handleMovement() {
     setInterval(() => {
-      if (!this.world.gameRunning || this.world.gameOver) return;
+      if (!this.world || !this.world.gameRunning || this.world.gameOver) return;
 
       let isMoving = this.moveRightCondition() || this.moveLeftCondition();
 
@@ -212,17 +212,18 @@ class Character extends MovableObject {
   }
 
   handleAnimation() {
-  setInterval(() => {
-    if (!this.world.gameRunning && !this.isDead()) return;
+    setInterval(() => {
+      if (!this.world) return;
+      if (!this.world.gameRunning && !this.isDead()) return;
 
-    if (this.isDead()) return this.handleDead();
-    if (this.isHurt()) return this.handleHurt();
-    if (this.isAboveGround()) return this.handleJumpAnimation();
-    if (this.isWalking()) return this.handleWalkAnimation();
+      if (this.isDead()) return this.handleDead();
+      if (this.isHurt()) return this.handleHurt();
+      if (this.isAboveGround()) return this.handleJumpAnimation();
+      if (this.isWalking()) return this.handleWalkAnimation();
 
-    this.handleIdle();
-  }, 120);
-}
+      this.handleIdle();
+    }, 120);
+  }
 
   handleDead() {
     this.playAnimation(this.IMAGES_DEAD);

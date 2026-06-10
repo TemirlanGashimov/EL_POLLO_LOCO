@@ -94,6 +94,10 @@ function resumeGame() {
   world.gameRunning = true;
   world.draw();
 
+  if (soundEnabled && world.bossFightStarted && world.boss && !world.boss.isDead) {
+    world.boss.endbossApproach_sound.play().catch(() => {});
+  }
+
   paused = false;
 }
 
@@ -108,6 +112,10 @@ function togglePause() {
       world.character.sleeping_sound.pause();
       world.character.jumping_sound.pause();
       world.character.hurts_sound.pause();
+    }
+
+    if (world && world.boss && world.boss.endbossApproach_sound) {
+      world.boss.endbossApproach_sound.pause();
     }
 
     paused = true;
@@ -268,6 +276,11 @@ function stopAllSounds() {
       sound.pause();
       sound.currentTime = 0;
     });
+  }
+
+  if (world && world.boss && world.boss.endbossApproach_sound) {
+    world.boss.endbossApproach_sound.pause();
+    world.boss.endbossApproach_sound.currentTime = 0;
   }
 }
 
