@@ -77,18 +77,19 @@ class World {
   }
 
   checkEnemyCollisions() {
+    let isFalling = this.character.speedY < 0;
     this.level.enemies.forEach((enemy, index) => {
       if (this.character.isColliding(enemy) && !enemy.isDeadChicken) {
-        this.handleEnemyHit(enemy, index);
+        this.handleEnemyHit(enemy, index, isFalling);
       }
     });
   }
 
-  handleEnemyHit(enemy, index) {
+  handleEnemyHit(enemy, index, isFalling) {
     let characterBottom = this.character.y + this.character.height;
     let enemyTop = enemy.y;
 
-    if (this.character.speedY < 0 && characterBottom - 40 < enemyTop + 30) {
+    if (isFalling && characterBottom - 40 < enemyTop + 30) {
       this.jumpOnEnemy(enemy, index);
     } else {
       this.damageCharacter(enemy);
