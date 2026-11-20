@@ -16,13 +16,14 @@ Features
 - Game states including start screen, pause, victory, game over, and restart
 - Sound effects and music, with a mute setting saved in local storage
 - Fullscreen support and touch controls for compatible mobile devices
+- 
 Controls
-Key	Action
-← / →	Move left / right
-Space	Jump
-D	Throw a salsa bottle
-F	Buy a bottle with collected coins
-Esc	Pause / resume
+Key	         Action
+← / →	         Move left / right
+Space	         Jump
+D	            Throw a salsa bottle
+F	            Buy a bottle with collected coins
+Esc	         Pause / resume
 
 
 On touch-enabled devices, on-screen buttons provide movement, jump, throw, and buy controls.
@@ -33,7 +34,9 @@ Technologies
 - Canvas 2D API — Rendering the game world and animated sprites
 - JSDoc — Source-code documentation
 Project Structure
+
 EL_POLLO_LOCO/
+
 ├── index.html          # Main game page and menus
 ├── style.css           # Styling and responsive layout
 ├── js/
@@ -44,6 +47,7 @@ EL_POLLO_LOCO/
 ├── img/                # Sprite sheets and visual assets
 ├── sounds/             # Game audio and effects
 └── README_JSDOC.md     # Notes on generating code documentation
+
 Run Locally
 1. Clone the repository:
    git clone https://github.com/TemirlanGashimov/EL_POLLO_LOCO.git
